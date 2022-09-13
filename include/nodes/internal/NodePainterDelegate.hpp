@@ -20,6 +20,6 @@ public:
   virtual void
   paint(QPainter* painter,
         NodeGeometry const& geom,
-        NodeDataModel const * model) = 0;
+        NodeDataModel * model) = 0;
 };
 }

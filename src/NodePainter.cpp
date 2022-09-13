@@ -27,36 +27,40 @@ paint(QPainter* painter,
       Node & node,
       FlowScene const& scene)
 {
-  NodeGeometry const& geom = node.nodeGeometry();
+    NodeGeometry const& geom = node.nodeGeometry();
 
-  NodeState const& state = node.nodeState();
+    NodeState const& state = node.nodeState();
 
-  NodeGraphicsObject const & graphicsObject = node.nodeGraphicsObject();
+    NodeGraphicsObject const & graphicsObject = node.nodeGraphicsObject();
 
-  geom.recalculateSize(painter->font());
+    geom.recalculateSize(painter->font());
 
-  //--------------------------------------------
-  NodeDataModel const * model = node.nodeDataModel();
 
-  drawNodeRect(painter, geom, model, graphicsObject);
+    //--------------------------------------------
+    NodeDataModel const * model = node.nodeDataModel();
 
-  drawConnectionPoints(painter, geom, state, model, scene);
+    /// call custom painter
+    if (auto painterDelegate = model->painterDelegate())
+    {
+        painterDelegate->paint(painter, geom, node.nodeDataModel());
+        return;
+    }
 
-  drawFilledConnectionPoints(painter, geom, state, model);
+    drawNodeRect(painter, geom, model, graphicsObject);
 
-  drawModelName(painter, geom, state, model);
+    drawConnectionPoints(painter, geom, state, model, scene);
 
-  drawEntryLabels(painter, geom, state, model);
+    drawFilledConnectionPoints(painter, geom, state, model);
 
-  drawResizeRect(painter, geom, model);
+    drawModelName(painter, geom, state, model);
 
-  drawValidationRect(painter, geom, model, graphicsObject);
+    drawEntryLabels(painter, geom, state, model);
 
-  /// call custom painter
-  if (auto painterDelegate = model->painterDelegate())
-  {
-    painterDelegate->paint(painter, geom, model);
-  }
+    drawResizeRect(painter, geom, model);
+
+    drawValidationRect(painter, geom, model, graphicsObject);
+
+
 }
 
 
