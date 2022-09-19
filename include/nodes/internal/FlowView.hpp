@@ -63,6 +63,8 @@ private:
   QAction* _deleteSelectionAction;
 
   QPointF _clickPos;
+  QBrush _brushPattern;
+  QImage _patternImage;
 
   FlowScene* _scene;
 };

@@ -43,6 +43,8 @@ find_package(Qt6 QUIET
    Widgets
    Gui
    OpenGL
+        Svg
+        SvgWidgets
 )
 
 if (NOT Qt6_FOUND)
@@ -52,6 +54,8 @@ if (NOT Qt6_FOUND)
      Widgets
      Gui
      OpenGL
+          Svg
+          SvgWidgets
   )
 endif()
 
@@ -118,6 +122,8 @@ target_link_libraries(nodes
     ${Qt}::Widgets
     ${Qt}::Gui
     ${Qt}::OpenGL
+    ${Qt}::Svg
+    ${Qt}::SvgWidgets
 )
 
 target_compile_definitions(nodes

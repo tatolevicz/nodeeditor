@@ -5,6 +5,8 @@
 #include <QtGui/QPen>
 #include <QtGui/QBrush>
 #include <QtWidgets/QMenu>
+#include <QSvgRenderer>
+#include <QGraphicsSvgItem>
 
 #include <QtCore/QRectF>
 #include <QtCore/QPointF>
@@ -48,7 +50,18 @@ FlowView(QWidget *parent)
   setCacheMode(QGraphicsView::CacheBackground);
   setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 
-  //setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
+  auto patternImage =  QPixmap(":/content/images/editor_pattern.svg");
+  _brushPattern = QBrush(patternImage);
+  _brushPattern.setStyle(Qt::TexturePattern);
+  setBackgroundBrush(_brushPattern);
+
+//    QGraphicsSvgItem *item = new QGraphicsSvgItem(":/content/images/editor_pattern.svg");
+//    addItem(item);
+
+//  setBackgroundBrush(_brushPattern);
+
+
+    //setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
 }
 
 
@@ -81,6 +94,9 @@ FlowView::setScene(FlowScene *scene)
 {
   _scene = scene;
   QGraphicsView::setScene(_scene);
+
+//    QGraphicsSvgItem *item = new QGraphicsSvgItem(":/content/images/editor_pattern.svg");
+//    _scene->addItem(item);
 
   // setup actions
   delete _clearSelectionAction;
@@ -344,8 +360,12 @@ void
 FlowView::
 drawBackground(QPainter* painter, const QRectF& r)
 {
-  QGraphicsView::drawBackground(painter, r);
 
+    setRenderHint(QPainter::Antialiasing);
+    QGraphicsView::drawBackground(painter, r);
+    painter->fillRect(r,_brushPattern);
+
+    return;
   auto drawGrid =
     [&](double gridStep)
     {
@@ -358,22 +378,35 @@ drawBackground(QPainter* painter, const QRectF& r)
       double bottom = std::floor(tl.y() / gridStep - 0.5);
       double top    = std::floor (br.y() / gridStep + 1.0);
 
-      // vertical lines
-      for (int xi = int(left); xi <= int(right); ++xi)
-      {
-        QLineF line(xi * gridStep, bottom * gridStep,
-                    xi * gridStep, top * gridStep );
+      //draw dots
+//        for (int xi = int(left); xi <= int(right); ++xi)
+//        {
+//            for (int yi = int(bottom); yi <= int(top); ++yi)
+//            {
+//              QLineF line(xi * gridStep, (bottom + yi) * gridStep ,
+//                          xi * gridStep, (top + yi) * gridStep) ;
+//              qreal radius = 2.0f;
+//              painter->drawEllipse(line.p1(),radius,radius);
+//              painter->drawEllipse(line.p2(),radius,radius);
+//            }
+//        }
 
-        painter->drawLine(line);
-      }
+      // vertical lines
+//      for (int xi = int(left); xi <= int(right); ++xi)
+//      {
+//        QLineF line(xi * gridStep, bottom * gridStep,
+//                    xi * gridStep, top * gridStep );
+//
+//        painter->drawLine(line);
+//      }
 
       // horizontal lines
-      for (int yi = int(bottom); yi <= int(top); ++yi)
-      {
-        QLineF line(left * gridStep, yi * gridStep,
-                    right * gridStep, yi * gridStep );
-        painter->drawLine(line);
-      }
+//      for (int yi = int(bottom); yi <= int(top); ++yi)
+//      {
+//        QLineF line(left * gridStep, yi * gridStep,
+//                    right * gridStep, yi * gridStep );
+//        painter->drawLine(line);
+//      }
     };
 
   auto const &flowViewStyle = StyleCollection::flowViewStyle();
