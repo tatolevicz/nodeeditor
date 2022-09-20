@@ -30,6 +30,8 @@ public:
 public Q_SLOTS:
   void deleteSelectedNodes();
   void scalingTime(qreal x);
+  void movingTime(qreal x);
+  void movingAnimFinished();
   void animFinished();
 
 protected:
@@ -63,8 +65,10 @@ private:
   QBrush _brushPattern;
   QImage _patternImage;
   int _numScheduledScalings;
+  int _numScheduledMovings;
+  QPointF _differenceMoving;
 
 
-  FlowScene* _scene;
+    FlowScene* _scene;
 };
 }
