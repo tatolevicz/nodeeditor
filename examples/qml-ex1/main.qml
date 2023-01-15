@@ -6,12 +6,22 @@ Window {
     height: 480
     visible: true
     title: qsTr("Hello World")
-
-    GraphView{
-        id: flowView
-        width: parent.width
-        height: parent.height
-        anchors.margins: 20
-
+    Rectangle{
+        id: parentBg
+        anchors.fill: parent
+        color: "black"
+        Rectangle{
+            id: container
+            anchors.fill: parent
+            anchors.margins: 20
+            color: "grey"
+            radius: 60
+            clip: true
+            GraphView{
+                id: flowView
+                width: parent.width
+                height: parent.height
+            }
+        }
     }
 }
