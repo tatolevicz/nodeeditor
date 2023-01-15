@@ -5,3 +5,8 @@ build*/
 .vscode/
 
 tags
+
+
+.idea
+*build*
+.DS_Store
