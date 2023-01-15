@@ -5,6 +5,7 @@
 
 #include "Export.hpp"
 
+class QSGTransformNode;
 namespace QtNodes {
 
 class QmlBasicGraphicsScene;
@@ -67,6 +68,8 @@ Q_SIGNALS:
 protected:
 protected:
     QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *) override;
+    void geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry) override;
+
 //    void contextMenuEvent(QContextMenuEvent *event) override;
 
     void wheelEvent(QWheelEvent *event) override;
@@ -99,5 +102,7 @@ private:
 
     QPointF _clickPos;
     ScaleRange _scaleRange;
+    QSGTransformNode *_transformNode{nullptr};
+    bool _geometryChanged;
 };
 } // namespace QtNodes

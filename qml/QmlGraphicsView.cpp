@@ -1,5 +1,6 @@
 #include "QmlGraphicsView.hpp"
 #include <QSGGeometryNode>
+#include <QSGTransformNode>
 #include "gridnode.h"
 #include "QmlBasicGraphicsScene.hpp"
 #include "ConnectionGraphicsObject.hpp"
@@ -344,27 +345,68 @@ void QmlGraphicsView::mouseMoveEvent(QMouseEvent *event)
 //    }
 }
 
+class GraphNode : public QSGNode
+{
+public:
+    GridNode *grid;
+};
+
+void QmlGraphicsView::geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry)
+{
+    _geometryChanged = true;
+    update();
+    QQuickItem::geometryChange(newGeometry, oldGeometry);
+}
+
+
 QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
 {
-    QSGGeometryNode *node = nullptr;
-//    QSGGeometry *geometry = nullptr;
+    GraphNode *n= static_cast<GraphNode *>(oldNode);
 
-    if (!oldNode) {
-        auto gridNode = new GridNode;
-        gridNode->setRect(boundingRect());
-        node = gridNode;
-    }
-    else{
-        auto gridNode = static_cast<GridNode *>(oldNode);
-        gridNode->setRect(boundingRect());
-        node = gridNode;
+    QRectF rect = boundingRect();
+
+    if (rect.isEmpty()) {
+        delete n;
+        return nullptr;
     }
 
+    if (!n) {
+        n = new GraphNode();
+        n->grid = new GridNode();
+        n->appendChildNode(n->grid);
+    }
 
-    node->markDirty(QSGNode::DirtyGeometry);
+    if (_geometryChanged) {
+        n->grid->setRect(rect);
+    }
 
-    qDebug() << "Paint called" ;
-    return node;
+    _geometryChanged = false;
+
+    return n;
+//    QSGGeometryNode *node = nullptr;
+////    QSGGeometry *geometry = nullptr;
+//
+//    if (!oldNode) {
+//        auto gridNode = new GridNode;
+//        gridNode->setRect(boundingRect());
+//        node = gridNode;
+//    }
+//    else{
+//        auto gridNode = static_cast<GridNode *>(oldNode);
+//        gridNode->setRect(boundingRect());
+//        node = gridNode;
+//    }
+//
+//
+//    node->markDirty(QSGNode::DirtyGeometry);
+//
+//    qDebug() << "Paint called" ;
+//    if(_transformNode == nullptr) {
+//        _transformNode = new QSGTransformNode;
+//        _transformNode->appendChildNode(node);
+//    }
+//
+//    return _transformNode;
 }
 //void QmlGraphicsView::paint(QPainter *painter){
 //    drawBackground(painter, contentsBoundingRect());
