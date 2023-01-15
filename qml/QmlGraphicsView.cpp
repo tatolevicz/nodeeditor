@@ -1,5 +1,6 @@
 #include "QmlGraphicsView.hpp"
-
+#include <QSGGeometryNode>
+#include "gridnode.h"
 #include "QmlBasicGraphicsScene.hpp"
 #include "ConnectionGraphicsObject.hpp"
 #include "NodeGraphicsObject.hpp"
@@ -27,13 +28,14 @@ using QtNodes::QmlBasicGraphicsScene;
 using QtNodes::QmlGraphicsView;
 
 QmlGraphicsView::QmlGraphicsView(QQuickItem *parent)
-    : QQuickPaintedItem(parent)
+    : QQuickItem(parent)
     , _clearSelectionAction(Q_NULLPTR)
     , _deleteSelectionAction(Q_NULLPTR)
     , _duplicateSelectionAction(Q_NULLPTR)
     , _copySelectionAction(Q_NULLPTR)
     , _pasteAction(Q_NULLPTR)
 {
+    setFlag(ItemHasContents, true);
 //    setDragMode(QQmlGraphicsView::ScrollHandDrag);
 //    setRenderHint(QPainter::Antialiasing);
 
@@ -341,52 +343,75 @@ void QmlGraphicsView::mouseMoveEvent(QMouseEvent *event)
 //        }
 //    }
 }
-void QmlGraphicsView::paint(QPainter *painter){
-    drawBackground(painter, contentsBoundingRect());
-}
 
-
-void QmlGraphicsView::drawBackground(QPainter *painter, const QRectF &r)
+QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
 {
-//    QQmlGraphicsView::drawBackground(painter, r);
-    qDebug() << "DrawBg: " << r.x();
-    auto drawGrid = [&](double gridStep) {
-//        QRect windowRect = rect();
-        QRectF windowRect = contentsBoundingRect();
-        QPointF tl = mapToScene(windowRect.topLeft());
-        QPointF br = mapToScene(windowRect.bottomRight());
+    QSGGeometryNode *node = nullptr;
+//    QSGGeometry *geometry = nullptr;
 
-        double left = std::floor(tl.x() / gridStep - 0.5);
-        double right = std::floor(br.x() / gridStep + 1.0);
-        double bottom = std::floor(tl.y() / gridStep - 0.5);
-        double top = std::floor(br.y() / gridStep + 1.0);
+    if (!oldNode) {
+        auto gridNode = new GridNode;
+        gridNode->setRect(boundingRect());
+        node = gridNode;
+    }
+    else{
+        auto gridNode = static_cast<GridNode *>(oldNode);
+        gridNode->setRect(boundingRect());
+        node = gridNode;
+    }
 
-        // vertical lines
-        for (int xi = int(left); xi <= int(right); ++xi) {
-            QLineF line(xi * gridStep, bottom * gridStep, xi * gridStep, top * gridStep);
 
-            painter->drawLine(line);
-        }
+    node->markDirty(QSGNode::DirtyGeometry);
 
-        // horizontal lines
-        for (int yi = int(bottom); yi <= int(top); ++yi) {
-            QLineF line(left * gridStep, yi * gridStep, right * gridStep, yi * gridStep);
-            painter->drawLine(line);
-        }
-    };
-
-    auto const &flowViewStyle = StyleCollection::flowViewStyle();
-
-    QPen pfine(flowViewStyle.FineGridColor, 1.0);
-
-    painter->setPen(pfine);
-    drawGrid(15);
-
-    QPen p(flowViewStyle.CoarseGridColor, 1.0);
-
-    painter->setPen(p);
-    drawGrid(150);
+    qDebug() << "Paint called" ;
+    return node;
 }
+//void QmlGraphicsView::paint(QPainter *painter){
+//    drawBackground(painter, contentsBoundingRect());
+//}
+
+//
+//void QmlGraphicsView::drawBackground(QPainter *painter, const QRectF &r)
+//{
+////    QQmlGraphicsView::drawBackground(painter, r);
+//    qDebug() << "DrawBg: " << r.x();
+//    auto drawGrid = [&](double gridStep) {
+////        QRect windowRect = rect();
+//        QRectF windowRect = contentsBoundingRect();
+//        QPointF tl = mapToScene(windowRect.topLeft());
+//        QPointF br = mapToScene(windowRect.bottomRight());
+//
+//        double left = std::floor(tl.x() / gridStep - 0.5);
+//        double right = std::floor(br.x() / gridStep + 1.0);
+//        double bottom = std::floor(tl.y() / gridStep - 0.5);
+//        double top = std::floor(br.y() / gridStep + 1.0);
+//
+//        // vertical lines
+//        for (int xi = int(left); xi <= int(right); ++xi) {
+//            QLineF line(xi * gridStep, bottom * gridStep, xi * gridStep, top * gridStep);
+//
+//            painter->drawLine(line);
+//        }
+//
+//        // horizontal lines
+//        for (int yi = int(bottom); yi <= int(top); ++yi) {
+//            QLineF line(left * gridStep, yi * gridStep, right * gridStep, yi * gridStep);
+//            painter->drawLine(line);
+//        }
+//    };
+//
+//    auto const &flowViewStyle = StyleCollection::flowViewStyle();
+//
+//    QPen pfine(flowViewStyle.FineGridColor, 1.0);
+//
+//    painter->setPen(pfine);
+//    drawGrid(15);
+//
+//    QPen p(flowViewStyle.CoarseGridColor, 1.0);
+//
+//    painter->setPen(p);
+//    drawGrid(150);
+//}
 
 void QmlGraphicsView::showEvent(QShowEvent *event)
 {
@@ -408,7 +433,7 @@ QPointF QmlGraphicsView::scenePastePosition()
     QPointF origin = mapFromGlobal(QCursor::pos());
 
 //    QRect const viewRect = rect();
-    QRectF const viewRect = contentsBoundingRect();
+    QRectF const viewRect = boundingRect();
     if (!viewRect.contains(origin))
         origin = viewRect.center();
 

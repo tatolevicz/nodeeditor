@@ -1,7 +1,7 @@
 #pragma once
 
 //#include <QtWidgets/QQmlGraphicsView>
-#include <QQuickPaintedItem>
+#include <QQuickItem>
 
 #include "Export.hpp"
 
@@ -12,7 +12,7 @@ class QmlBasicGraphicsScene;
 /**
  * @brief A central view able to render objects from `QmlBasicGraphicsScene`.
  */
-class NODE_EDITOR_PUBLIC QmlGraphicsView : public QQuickPaintedItem
+class NODE_EDITOR_PUBLIC QmlGraphicsView : public QQuickItem
 {
     Q_OBJECT
 public:
@@ -24,7 +24,7 @@ public:
 
 public:
     QmlGraphicsView(QQuickItem *parent = Q_NULLPTR);
-    void paint(QPainter *painter) override;
+
 
     QmlGraphicsView(QmlBasicGraphicsScene *scene, QQuickItem *parent = Q_NULLPTR);
 
@@ -65,6 +65,8 @@ Q_SIGNALS:
     void scaleChanged(double scale);
 
 protected:
+protected:
+    QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *) override;
 //    void contextMenuEvent(QContextMenuEvent *event) override;
 
     void wheelEvent(QWheelEvent *event) override;
@@ -77,7 +79,7 @@ protected:
 
     void mouseMoveEvent(QMouseEvent *event) override;
 
-    void drawBackground(QPainter *painter, const QRectF &r);
+//    void drawBackground(QPainter *painter, const QRectF &r);
 
     void showEvent(QShowEvent *event);
 
