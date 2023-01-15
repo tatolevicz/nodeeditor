@@ -24,6 +24,8 @@ public:
 
 public:
     QmlGraphicsView(QQuickItem *parent = Q_NULLPTR);
+    void paint(QPainter *painter) override;
+
     QmlGraphicsView(QmlBasicGraphicsScene *scene, QQuickItem *parent = Q_NULLPTR);
 
     QmlGraphicsView(const QmlGraphicsView &) = delete;

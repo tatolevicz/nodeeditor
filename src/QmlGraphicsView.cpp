@@ -341,6 +341,10 @@ void QmlGraphicsView::mouseMoveEvent(QMouseEvent *event)
 //        }
 //    }
 }
+void QmlGraphicsView::paint(QPainter *painter){
+    drawBackground(painter, contentsBoundingRect());
+}
+
 
 void QmlGraphicsView::drawBackground(QPainter *painter, const QRectF &r)
 {
