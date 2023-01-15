@@ -13,7 +13,7 @@ qt_add_executable(appQmlEx1
     graphview.h graphview.cpp
     simplegraphmodel.h simplegraphmodel.cpp
 
-)
+        customTest.cpp customTest.h)
 
 qt_add_qml_module(appQmlEx1
     URI qml-ex1
