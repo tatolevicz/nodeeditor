@@ -1,1 +1,1 @@
-#include "internal/QmlBasicGraphicsScene.hpp"
+#include "../../qml/QmlBasicGraphicsScene.hpp"

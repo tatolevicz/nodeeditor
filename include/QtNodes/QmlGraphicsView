@@ -1,1 +1,1 @@
-#include "internal/QmlGraphicsView.hpp"
+#include "../../qml/QmlGraphicsView.hpp"

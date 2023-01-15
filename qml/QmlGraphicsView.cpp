@@ -8,14 +8,14 @@
 
 #include <QQuickPaintedItem>
 
-#include <QtGui/QBrush>
-#include <QtGui/QPen>
+#include <QBrush>
+#include <QPen>
 
-#include <QtWidgets/QMenu>
+#include <QMenu>
 
-#include <QtCore/QDebug>
-#include <QtCore/QPointF>
-#include <QtCore/QRectF>
+#include <QDebug>
+#include <QPointF>
+#include <QRectF>
 
 #include <QtOpenGL>
 #include <QtWidgets>

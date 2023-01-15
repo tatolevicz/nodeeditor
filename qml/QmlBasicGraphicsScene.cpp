@@ -14,14 +14,14 @@
 //#include <QtWidgets/QFileDialog>
 //#include <QtWidgets/QGraphicsSceneMoveEvent>
 
-#include <QtCore/QBuffer>
-#include <QtCore/QByteArray>
-#include <QtCore/QDataStream>
-#include <QtCore/QFile>
-#include <QtCore/QJsonArray>
-#include <QtCore/QJsonDocument>
-#include <QtCore/QJsonObject>
-#include <QtCore/QtGlobal>
+#include <QBuffer>
+#include <QByteArray>
+#include <QDataStream>
+#include <QFile>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QtGlobal>
 
 #include <iostream>
 #include <stdexcept>

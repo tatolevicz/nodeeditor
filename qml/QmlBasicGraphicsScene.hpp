@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QtCore/QUuid>
+#include <QUuid>
 //#include <QtWidgets/QGraphicsScene>
 //#include <QtWidgets/QMenu>
 #include <QQuickPaintedItem>
