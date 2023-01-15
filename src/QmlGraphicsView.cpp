@@ -37,7 +37,7 @@ QmlGraphicsView::QmlGraphicsView(QQuickItem *parent)
 //    setDragMode(QQmlGraphicsView::ScrollHandDrag);
 //    setRenderHint(QPainter::Antialiasing);
 
-    auto const &flowViewStyle = StyleCollection::flowViewStyle();
+//    auto const &flowViewStyle = StyleCollection::flowViewStyle();
 
 //    setBackgroundBrush(flowViewStyle.BackgroundColor);
 
@@ -53,7 +53,7 @@ QmlGraphicsView::QmlGraphicsView(QQuickItem *parent)
 
     // Sets the scene rect to its maximum possible ranges to avoid autu scene range
     // re-calculation when expanding the all QGraphicsItems common rect.
-    int maxSize = 32767;
+//    int maxSize = 32767;
 //    setSceneRect(-maxSize, -maxSize, (maxSize * 2), (maxSize * 2));
 }
 
@@ -219,8 +219,8 @@ void QmlGraphicsView::setScaleRange(ScaleRange range)
 
 void QmlGraphicsView::scaleUp()
 {
-    double const step = 1.2;
-    double const factor = std::pow(step, 1.0);
+//    double const step = 1.2;
+//    double const factor = std::pow(step, 1.0);
 
 //    if (_scaleRange.maximum > 0) {
 //        QTransform t = transform();
@@ -237,8 +237,8 @@ void QmlGraphicsView::scaleUp()
 
 void QmlGraphicsView::scaleDown()
 {
-    double const step = 1.2;
-    double const factor = std::pow(step, -1.0);
+//    double const step = 1.2;
+//    double const factor = std::pow(step, -1.0);
 
 //    if (_scaleRange.minimum > 0) {
 //        QTransform t = transform();
@@ -277,7 +277,7 @@ void QmlGraphicsView::onDeleteSelectedObjects()
 
 void QmlGraphicsView::onDuplicateSelectedObjects()
 {
-    QPointF const pastePosition = scenePastePosition();
+//    QPointF const pastePosition = scenePastePosition();
 
 //    nodeScene()->undoStack().push(new CopyCommand(nodeScene()));
 //    nodeScene()->undoStack().push(new PasteCommand(nodeScene(), pastePosition));
@@ -290,7 +290,7 @@ void QmlGraphicsView::onCopySelectedObjects()
 
 void QmlGraphicsView::onPasteObjects()
 {
-    QPointF const pastePosition = scenePastePosition();
+//    QPointF const pastePosition = scenePastePosition();
 //    nodeScene()->undoStack().push(new PasteCommand(nodeScene(), pastePosition));
 }
 
@@ -331,6 +331,7 @@ void QmlGraphicsView::mousePressEvent(QMouseEvent *event)
 
 void QmlGraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
+    qDebug() << "Event: " << event->pos().y();
 //    QQmlGraphicsView::mouseMoveEvent(event);
 //    if (scene()->mouseGrabberItem() == nullptr && event->buttons() == Qt::LeftButton) {
 //        // Make sure shift is not being pressed
@@ -344,7 +345,7 @@ void QmlGraphicsView::mouseMoveEvent(QMouseEvent *event)
 void QmlGraphicsView::drawBackground(QPainter *painter, const QRectF &r)
 {
 //    QQmlGraphicsView::drawBackground(painter, r);
-
+    qDebug() << "DrawBg: " << r.x();
     auto drawGrid = [&](double gridStep) {
 //        QRect windowRect = rect();
         QRectF windowRect = contentsBoundingRect();
@@ -385,6 +386,7 @@ void QmlGraphicsView::drawBackground(QPainter *painter, const QRectF &r)
 
 void QmlGraphicsView::showEvent(QShowEvent *event)
 {
+    qDebug() << "Ev: " << event->isAccepted();
 //    QQmlGraphicsView::showEvent(event);
 
     centerScene();

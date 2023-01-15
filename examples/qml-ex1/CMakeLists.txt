@@ -11,6 +11,7 @@ qt_add_executable(appQmlEx1
     main.cpp
     ellipseitem.h ellipseitem.cpp
     graphview.h graphview.cpp
+    simplegraphmodel.h simplegraphmodel.cpp
 
 )
 
@@ -29,7 +30,9 @@ set_target_properties(appQmlEx1 PROPERTIES
 )
 
 target_link_libraries(appQmlEx1
-    PRIVATE Qt6::Quick)
+    PRIVATE Qt6::Quick
+    QtNodes
+)
 
 install(TARGETS appQmlEx1
     BUNDLE DESTINATION .

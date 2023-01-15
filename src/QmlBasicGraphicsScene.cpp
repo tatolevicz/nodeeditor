@@ -112,7 +112,7 @@ std::unique_ptr<ConnectionGraphicsObject> const &QmlBasicGraphicsScene::makeDraf
     ConnectionId const incompleteConnectionId)
 {
 //    _draftConnection = std::make_unique<ConnectionGraphicsObject>(*this, incompleteConnectionId);
-
+    qDebug() << "DrafConnection: " << incompleteConnectionId.inNodeId;
     _draftConnection->grabMouse();
 
     return _draftConnection;
@@ -184,22 +184,22 @@ void QmlBasicGraphicsScene::traverseGraphAndPopulateGraphicsObjects()
     auto allNodeIds = _graphModel.allNodeIds();
 
     // First create all the nodes.
-    for (NodeId const nodeId : allNodeIds) {
+//    for (NodeId const nodeId : allNodeIds) {
 //        _nodeGraphicsObjects[nodeId] = std::make_unique<NodeGraphicsObject>(*this, nodeId);
-    }
+//    }
 
     // Then for each node check output connections and insert them.
-    for (NodeId const nodeId : allNodeIds) {
-        unsigned int nOutPorts = _graphModel.nodeData<PortCount>(nodeId, NodeRole::OutPortCount);
+//    for (NodeId const nodeId : allNodeIds) {
+//        unsigned int nOutPorts = _graphModel.nodeData<PortCount>(nodeId, NodeRole::OutPortCount);
 
-        for (PortIndex index = 0; index < nOutPorts; ++index) {
-            auto const &outConnectionIds = _graphModel.connections(nodeId, PortType::Out, index);
+//        for (PortIndex index = 0; index < nOutPorts; ++index) {
+//            auto const &outConnectionIds = _graphModel.connections(nodeId, PortType::Out, index);
 
-            for (auto cid : outConnectionIds) {
+//            for (auto cid : outConnectionIds) {
 //                _connectionGraphicsObjects[cid] = std::make_unique<ConnectionGraphicsObject>(*this, cid);
-            }
-        }
-    }
+//            }
+//        }
+//    }
 }
 
 void QmlBasicGraphicsScene::updateAttachedNodes(ConnectionId const connectionId,
@@ -248,6 +248,8 @@ void QmlBasicGraphicsScene::onNodeDeleted(NodeId const nodeId)
 void QmlBasicGraphicsScene::onNodeCreated(NodeId const nodeId)
 {
 //    _nodeGraphicsObjects[nodeId] = std::make_unique<NodeGraphicsObject>(*this, nodeId);
+    qDebug() << "onNodeCreated: " << nodeId;
+
 }
 
 void QmlBasicGraphicsScene::onNodePositionUpdated(NodeId const nodeId)
