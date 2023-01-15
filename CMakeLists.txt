@@ -133,7 +133,7 @@ set(HPP_HEADER_FILES
   src/DefaultVerticalNodeGeometry.hpp
   src/NodeConnectionInteraction.hpp
   src/UndoCommands.hpp
-        )
+        render_abstraction/AbstractGraphicsScene.h render_abstraction/AbstractGrapicsView.h render_abstraction/AbstractConnectionGraphicsObject.h render_abstraction/AbstractNodeGraphicsObject.h)
 
 # If we want to give the option to build a static library,
 # set BUILD_SHARED_LIBS option to OFF
@@ -151,6 +151,7 @@ target_include_directories(QtNodes
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/qml>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/render_abstraction>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/qml/CustomItems>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/QtNodes/internal>
   PRIVATE
