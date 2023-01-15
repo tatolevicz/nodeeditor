@@ -47,7 +47,7 @@ endif()
 add_subdirectory(external)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets Gui OpenGL)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets Gui OpenGL Quick)
 message(STATUS "QT_VERSION: ${QT_VERSION}, QT_DIR: ${QT_DIR}")
 
 if (${QT_VERSION} VERSION_LESS 5.11.0)
@@ -68,6 +68,7 @@ set(CPP_SOURCE_FILES
   src/AbstractGraphModel.cpp
   src/AbstractNodeGeometry.cpp
   src/BasicGraphicsScene.cpp
+  src/QmlBasicGraphicsScene.cpp
   src/ConnectionGraphicsObject.cpp
   src/ConnectionPainter.cpp
   src/ConnectionState.cpp
@@ -78,6 +79,7 @@ set(CPP_SOURCE_FILES
   src/DefaultVerticalNodeGeometry.cpp
   src/Definitions.cpp
   src/GraphicsView.cpp
+  src/QmlGraphicsView.cpp
   src/GraphicsViewStyle.cpp
   src/NodeDelegateModelRegistry.cpp
   src/NodeConnectionInteraction.cpp
@@ -96,6 +98,7 @@ set(HPP_HEADER_FILES
   include/QtNodes/internal/AbstractNodeGeometry.hpp
   include/QtNodes/internal/AbstractNodePainter.hpp
   include/QtNodes/internal/BasicGraphicsScene.hpp
+  include/QtNodes/internal/QmlBasicGraphicsScene.hpp
   include/QtNodes/internal/Compiler.hpp
   include/QtNodes/internal/ConnectionGraphicsObject.hpp
   include/QtNodes/internal/ConnectionIdHash.hpp
@@ -108,6 +111,7 @@ set(HPP_HEADER_FILES
   include/QtNodes/internal/Definitions.hpp
   include/QtNodes/internal/Export.hpp
   include/QtNodes/internal/GraphicsView.hpp
+  include/QtNodes/internal/QmlGraphicsView.hpp
   include/QtNodes/internal/GraphicsViewStyle.hpp
   include/QtNodes/internal/locateNode.hpp
   include/QtNodes/internal/NodeData.hpp
@@ -155,6 +159,8 @@ target_link_libraries(QtNodes
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Gui
     Qt${QT_VERSION_MAJOR}::OpenGL
+    Qt${QT_VERSION_MAJOR}::Quick
+
 )
 
 target_compile_definitions(QtNodes
