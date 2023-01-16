@@ -377,9 +377,10 @@ void QmlGraphicsView::mouseMoveEvent(QMouseEvent *event)
     if (event->buttons() == Qt::LeftButton) {
         // Make sure shift is not being pressed
         if ((event->modifiers() & Qt::ShiftModifier) == 0) {
-            QPointF difference = (_clickPos - event->pos())*(-1);
-            _clickPos = event->pos();
             auto t = _transformNode->matrix().toTransform();
+
+            QPointF difference = (_clickPos - event->pos())*(-1)/t.m11();
+            _clickPos = event->pos();
             t.translate(difference.x(), difference.y());
             _transformNode->setMatrix(t);
             update();
