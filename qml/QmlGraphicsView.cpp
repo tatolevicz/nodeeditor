@@ -36,6 +36,7 @@ QmlGraphicsView::QmlGraphicsView(QQuickItem *parent)
     , _pasteAction(Q_NULLPTR)
 {
     setFlag(ItemHasContents, true);
+    setAcceptedMouseButtons(Qt::MouseButton::LeftButton);
 //    setDragMode(QQmlGraphicsView::ScrollHandDrag);
 //    setRenderHint(QPainter::Antialiasing);
 
@@ -359,14 +360,31 @@ void QmlGraphicsView::keyReleaseEvent(QKeyEvent *event)
 void QmlGraphicsView::mousePressEvent(QMouseEvent *event)
 {
 //    QQmlGraphicsView::mousePressEvent(event);
+//    if (event->button() == Qt::LeftButton) {
+//        _clickPos = mapToScene(event->pos());
+//    }
+
     if (event->button() == Qt::LeftButton) {
-        _clickPos = mapToScene(event->pos());
+        _clickPos = event->pos();
     }
 }
 
 void QmlGraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
-    qDebug() << "Event: " << event->pos().y();
+//    qDebug() << "Event X: " << event->pos().rx();
+//    qDebug() << "Event Y: " << event->pos().ry();
+    if (event->buttons() == Qt::LeftButton) {
+        // Make sure shift is not being pressed
+        if ((event->modifiers() & Qt::ShiftModifier) == 0) {
+            QPointF difference = (_clickPos - event->pos())*(-1);
+            _clickPos = event->pos();
+            auto t = _transformNode->matrix().toTransform();
+            t.translate(difference.x(), difference.y());
+            _transformNode->setMatrix(t);
+            update();
+        }
+    }
+
 //    QQmlGraphicsView::mouseMoveEvent(event);
 //    if (scene()->mouseGrabberItem() == nullptr && event->buttons() == Qt::LeftButton) {
 //        // Make sure shift is not being pressed

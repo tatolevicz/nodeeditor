@@ -15,10 +15,11 @@ Window {
             anchors.fill: parent
             anchors.margins: 20
             color: "grey"
-            radius: 60
+            //radius: 60
             clip: true
             GraphView{
                 id: flowView
+
                 width: parent.width
                 height: parent.height
             }
