@@ -38,6 +38,7 @@ QmlGraphicsView::QmlGraphicsView(QQuickItem *parent)
     setFlag(ItemHasContents, true);
     setAcceptedMouseButtons(Qt::MouseButton::LeftButton);
 //    setDragMode(QQmlGraphicsView::ScrollHandDrag);
+    setAcceptHoverEvents(true);
 //    setRenderHint(QPainter::Antialiasing);
 
 //    auto const &flowViewStyle = StyleCollection::flowViewStyle();
@@ -367,9 +368,16 @@ void QmlGraphicsView::mousePressEvent(QMouseEvent *event)
 
     if (event->button() == Qt::LeftButton) {
         _clickPos = event->pos();
+        QGuiApplication::setOverrideCursor(QCursor(Qt::ClosedHandCursor));
     }
 }
+void QmlGraphicsView::mouseReleaseEvent(QMouseEvent *event)
+{
 
+    if (event->button() == Qt::LeftButton) {
+        QGuiApplication::restoreOverrideCursor();
+    }
+}
 void QmlGraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
 //    qDebug() << "Event X: " << event->pos().rx();
@@ -396,7 +404,14 @@ void QmlGraphicsView::mouseMoveEvent(QMouseEvent *event)
 //        }
 //    }
 }
-
+void QmlGraphicsView::hoverEnterEvent(QHoverEvent *event){
+    Q_UNUSED(event);
+    QGuiApplication::setOverrideCursor(QCursor(Qt::OpenHandCursor));
+}
+void QmlGraphicsView::hoverLeaveEvent(QHoverEvent *event){
+    Q_UNUSED(event);
+    QGuiApplication::restoreOverrideCursor();
+}
 
 
 void QmlGraphicsView::geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry)
