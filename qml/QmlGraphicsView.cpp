@@ -299,6 +299,7 @@ void QmlGraphicsView::setupScale(double scale)
         return;
 
     QTransform matrix;
+    matrix.translate(t.dx(), t.dy());
     matrix.scale(scale, scale);
     _transformNode->setMatrix(matrix);
     update();
@@ -419,11 +420,16 @@ QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData 
     if (!_transformNode) {
         _transformNode = new GraphNode();
         _transformNode->grid = new GridNode();
+        int maxSize = 250;
+        _transformNode->grid->setRect(QRectF(0,0, maxSize, maxSize));
         _transformNode->appendChildNode(_transformNode->grid);
+//        auto t = _transformNode->matrix().toTransform();
+//        t.translate(maxSize/2, maxSize/2);
+//        _transformNode->setMatrix(t);
     }
 
     if (_geometryChanged) {
-        _transformNode->grid->setRect(rect);
+//        _transformNode->grid->setRect(rect);
     }
 
     _geometryChanged = false;
