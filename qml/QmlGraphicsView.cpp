@@ -37,9 +37,11 @@ QmlGraphicsView::QmlGraphicsView(QQuickItem *parent)
 {
     setFlag(ItemHasContents, true);
     setAcceptedMouseButtons(Qt::MouseButton::LeftButton);
-//    setDragMode(QQmlGraphicsView::ScrollHandDrag);
+//    setDragMode(QQmlGraphicsView::ScrollHandDrag); -> solved
     setAcceptHoverEvents(true);
-//    setRenderHint(QPainter::Antialiasing);
+
+//    setRenderHint(QPainter::Antialiasing); -> solved
+    setAntialiasing(true);
 
 //    auto const &flowViewStyle = StyleCollection::flowViewStyle();
 
