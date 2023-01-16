@@ -10,13 +10,14 @@
 class GridNode : public QSGGeometryNode
 {
 public:
-    GridNode();
+    GridNode(QColor gridColor);
 
     void setRect(const QRectF &rect);
 
 private:
     QSGFlatColorMaterial m_material;
     QSGGeometry m_geometry;
+    QColor m_gridColor;
 };
 
 #endif // GRIDNODE_H

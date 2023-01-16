@@ -19,7 +19,7 @@ Window {
             clip: true
             GraphView{
                 id: flowView
-
+                gridColor: "#AAAAAA"
                 width: parent.width
                 height: parent.height
             }

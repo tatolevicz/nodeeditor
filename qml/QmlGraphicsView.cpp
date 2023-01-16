@@ -420,7 +420,7 @@ QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData 
 
     if (!_transformNode) {
         _transformNode = new GraphNode();
-        _transformNode->grid = new GridNode();
+        _transformNode->grid = new GridNode(m_gridColor);
         int maxSize = 250;
         _transformNode->grid->setRect(QRectF(0,0, maxSize, maxSize));
         _transformNode->appendChildNode(_transformNode->grid);
@@ -533,4 +533,18 @@ QPointF QmlGraphicsView::scenePastePosition()
         origin = viewRect.center();
 
     return mapToScene(origin);
+}
+
+const QColor &QmlGraphicsView::gridColor() const
+{
+    return m_gridColor;
+}
+
+void QmlGraphicsView::setGridColor(const QColor &newGridColor)
+{
+    if (m_gridColor == newGridColor)
+        return;
+    m_gridColor = newGridColor;
+    update();
+    Q_EMIT gridColorChanged();
 }

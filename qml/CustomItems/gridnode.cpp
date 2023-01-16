@@ -7,14 +7,15 @@
 
 #define GRID_SIZE 16
 
-GridNode::GridNode()
-    : m_geometry(QSGGeometry::defaultAttributes_Point2D(), 0)
+GridNode::GridNode(QColor gridColor)
+    : m_geometry(QSGGeometry::defaultAttributes_Point2D(), 0),
+    m_gridColor(gridColor)
 {
     setGeometry(&m_geometry);
     m_geometry.setDrawingMode(QSGGeometry::DrawLines);
 
     setMaterial(&m_material);
-    m_material.setColor(Qt::gray);
+    m_material.setColor(m_gridColor);
 }
 
 /*

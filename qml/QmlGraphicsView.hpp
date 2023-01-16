@@ -24,12 +24,18 @@ class QmlBasicGraphicsScene;
 class NODE_EDITOR_PUBLIC QmlGraphicsView : public QQuickItem
 {
     Q_OBJECT
+    Q_PROPERTY(QColor gridColor READ gridColor WRITE setGridColor NOTIFY gridColorChanged)
+
 public:
     struct ScaleRange
     {
         double minimum = 0;
         double maximum = 0;
     };
+
+    const QColor &gridColor() const;
+    void setGridColor(const QColor &newBorderColor);
+
 
 public:
     QmlGraphicsView(QQuickItem *parent = Q_NULLPTR);
@@ -71,6 +77,7 @@ public Q_SLOTS:
     void onPasteObjects();
 
 Q_SIGNALS:
+    void gridColorChanged();
     void scaleChanged(double scale);
 
 protected:
@@ -112,5 +119,6 @@ private:
     ScaleRange _scaleRange;
     GraphNode *_transformNode{nullptr};
     bool _geometryChanged;
+    QColor m_gridColor;
 };
 } // namespace QtNodes
