@@ -1,6 +1,5 @@
 #include "QmlGraphicsView.hpp"
 #include <QSGGeometryNode>
-#include <QSGTransformNode>
 #include "gridnode.h"
 #include "QmlBasicGraphicsScene.hpp"
 #include "ConnectionGraphicsObject.hpp"
@@ -52,7 +51,7 @@ QmlGraphicsView::QmlGraphicsView(QQuickItem *parent)
 //    setCacheMode(QQmlGraphicsView::CacheBackground);
 //    setViewportUpdateMode(QQmlGraphicsView::BoundingRectViewportUpdate);
 
-    setScaleRange(0.3, 2);
+    setScaleRange(0.3, 2.0);
 
     // Sets the scene rect to its maximum possible ranges to avoid autu scene range
     // re-calculation when expanding the all QGraphicsItems common rect.
@@ -224,7 +223,7 @@ void QmlGraphicsView::scaleUp()
 {
 //    double const step = 1.2;
 //    double const factor = std::pow(step, 1.0);
-
+//
 //    if (_scaleRange.maximum > 0) {
 //        QTransform t = transform();
 //        t.scale(factor, factor);
@@ -236,6 +235,22 @@ void QmlGraphicsView::scaleUp()
 //
 //    scale(factor, factor);
 //    Q_EMIT scaleChanged(transform().m11());
+
+    double const step = 1.1;
+//    double const factor = std::pow(step, 1.1);
+    QTransform t = _transformNode->matrix().toTransform();
+
+    if (_scaleRange.maximum > 0) {
+        t.scale(step, step);
+        if (t.m11() >= _scaleRange.maximum) {
+            setupScale(t.m11());
+            return;
+        }
+    }
+
+    _transformNode->setMatrix(t);
+    update();
+
 }
 
 void QmlGraphicsView::scaleDown()
@@ -254,6 +269,21 @@ void QmlGraphicsView::scaleDown()
 //
 //    scale(factor, factor);
 //    Q_EMIT scaleChanged(transform().m11());
+
+    double const step = 0.9;
+//    double const factor = std::pow(step, 0.9);
+    QTransform t = _transformNode->matrix().toTransform();
+
+    if (_scaleRange.minimum > 0) {
+        t.scale(step, step);
+        if (t.m11() <= _scaleRange.minimum) {
+            setupScale(t.m11());
+            return;
+        }
+    }
+
+    _transformNode->setMatrix(t);
+    update();
 }
 
 void QmlGraphicsView::setupScale(double scale)
@@ -263,14 +293,16 @@ void QmlGraphicsView::setupScale(double scale)
     if (scale <= 0)
         return;
 
-//    if (scale == transform().m11())
-//        return;
-//
-//    QTransform matrix;
-//    matrix.scale(scale, scale);
-//    setTransform(matrix, false);
-//
-//    Q_EMIT scaleChanged(scale);
+    QTransform t = _transformNode->matrix().toTransform();
+    if (scale == t.m11())
+        return;
+
+    QTransform matrix;
+    matrix.scale(scale, scale);
+    _transformNode->setMatrix(matrix);
+    update();
+
+    Q_EMIT scaleChanged(scale);
 }
 
 void QmlGraphicsView::onDeleteSelectedObjects()
@@ -345,11 +377,7 @@ void QmlGraphicsView::mouseMoveEvent(QMouseEvent *event)
 //    }
 }
 
-class GraphNode : public QSGNode
-{
-public:
-    GridNode *grid;
-};
+
 
 void QmlGraphicsView::geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry)
 {
@@ -361,28 +389,28 @@ void QmlGraphicsView::geometryChange(const QRectF &newGeometry, const QRectF &ol
 
 QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
 {
-    GraphNode *n= static_cast<GraphNode *>(oldNode);
+    _transformNode = static_cast<GraphNode *>(oldNode);
 
     QRectF rect = boundingRect();
 
     if (rect.isEmpty()) {
-        delete n;
+        delete _transformNode;
         return nullptr;
     }
 
-    if (!n) {
-        n = new GraphNode();
-        n->grid = new GridNode();
-        n->appendChildNode(n->grid);
+    if (!_transformNode) {
+        _transformNode = new GraphNode();
+        _transformNode->grid = new GridNode();
+        _transformNode->appendChildNode(_transformNode->grid);
     }
 
     if (_geometryChanged) {
-        n->grid->setRect(rect);
+        _transformNode->grid->setRect(rect);
     }
 
     _geometryChanged = false;
 
-    return n;
+    return _transformNode;
 //    QSGGeometryNode *node = nullptr;
 ////    QSGGeometry *geometry = nullptr;
 //

@@ -4,8 +4,16 @@
 #include <QQuickItem>
 
 #include "Export.hpp"
+#include <QSGTransformNode>
 
-class QSGTransformNode;
+class GridNode;
+
+class GraphNode : public QSGTransformNode
+{
+public:
+    GridNode *grid;
+};
+
 namespace QtNodes {
 
 class QmlBasicGraphicsScene;
@@ -102,7 +110,7 @@ private:
 
     QPointF _clickPos;
     ScaleRange _scaleRange;
-    QSGTransformNode *_transformNode{nullptr};
+    GraphNode *_transformNode{nullptr};
     bool _geometryChanged;
 };
 } // namespace QtNodes
