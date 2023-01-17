@@ -16,7 +16,8 @@ Window {
             anchors.margins: 20
             color: "grey"
             //radius: 60
-            clip: true
+            clip: true  // there is an issue with the render and clip parent is not working
+                        //uncomment the radius to see that
             GraphView{
                 id: flowView
 //                fineGridColor: "blue"

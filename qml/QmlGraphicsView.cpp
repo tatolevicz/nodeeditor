@@ -44,14 +44,15 @@ QmlGraphicsView::QmlGraphicsView(QQuickItem *parent)
 //    setRenderHint(QPainter::Antialiasing); -> solved
     setAntialiasing(true);
 
+
     auto const &flowViewStyle = StyleCollection::flowViewStyle();
     m_backgroundColor = flowViewStyle.BackgroundColor;
     m_coarseGridColor = flowViewStyle.CoarseGridColor;
     m_fineGridColor = flowViewStyle.FineGridColor;
-//    setBackgroundBrush(flowViewStyle.BackgroundColor);
+//    setBackgroundBrush(flowViewStyle.BackgroundColor); -> solved
 
-//    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-//    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+//    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); -> solved
+//    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff); -> solved
 
 //    setTransformationAnchor(QQmlGraphicsView::AnchorUnderMouse);
 
