@@ -395,8 +395,12 @@ void QmlGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
             QPointF difference = (_clickPos - event->pos())*(-1)/t.m11();
             _clickPos = event->pos();
+
             t.translate(difference.x(), difference.y());
             _transformNode->setMatrix(t);
+            auto cpos = getCurrentPosition();
+            qDebug() << "X: " << cpos.x();
+            qDebug() << "Y: " << cpos.y();
             update();
         }
     }
@@ -445,13 +449,10 @@ QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData 
         _transformNode->fineGrid = new GridNode(m_fineGridColor, 16);
         _transformNode->coarseGrid = new GridNode(m_coarseGridColor, 16*10);
 
-        int maxSize = 1000;
-        _transformNode->background->setRect(QRectF(-maxSize,-maxSize, maxSize*2, maxSize*2));
-        _transformNode->fineGrid->setRect(QRectF(-maxSize,-maxSize, maxSize*2, maxSize*2));
-        _transformNode->coarseGrid->setRect(QRectF(-maxSize,-maxSize, maxSize*2, maxSize*2));
-//        _transformNode->background->setRect(QRectF(0,0, maxSize, maxSize));
-//        _transformNode->fineGrid->setRect(QRectF(0,0, maxSize, maxSize));
-//        _transformNode->coarseGrid->setRect(QRectF(0,0, maxSize, maxSize));
+
+        _transformNode->background->setRect(QRectF(-_maxSize,-_maxSize, _maxSize*2, _maxSize*2));
+        _transformNode->fineGrid->setRect(QRectF(-_maxSize,-_maxSize, _maxSize*2, _maxSize*2));
+        _transformNode->coarseGrid->setRect(QRectF(-_maxSize,-_maxSize, _maxSize*2, _maxSize*2));
         _transformNode->appendChildNode(_transformNode->background);
         _transformNode->appendChildNode(_transformNode->fineGrid);
         _transformNode->appendChildNode(_transformNode->coarseGrid);
@@ -607,4 +608,14 @@ void QmlGraphicsView::setCoarseGridColor(const QColor &newGridColor)
     m_coarseGridColor = newGridColor;
     update();
     Q_EMIT coarseGridColorChanged();
+}
+
+QPointF QmlGraphicsView::getCurrentPosition(){
+    QPointF out;
+    auto t = _transformNode->matrix().toTransform();
+
+    out.setX(t.dx() - boundingRect().width()/2);
+    out.setY(t.dy() - boundingRect().height()/2);
+
+    return  out;
 }

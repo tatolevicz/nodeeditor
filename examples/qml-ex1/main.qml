@@ -10,7 +10,8 @@ Window {
         id: parentBg
         anchors.fill: parent
         color: "black"
-        Rectangle{
+/*
+       Rectangle{
             id: container
             anchors.fill: parent
             anchors.margins: 20
@@ -18,6 +19,7 @@ Window {
             //radius: 60
             clip: true  // there is an issue with the render and clip parent is not working
                         //uncomment the radius to see that
+*/
             GraphView{
                 id: flowView
 //                fineGridColor: "blue"
@@ -27,5 +29,5 @@ Window {
                 height: parent.height
             }
         }
-    }
+//    }
 }

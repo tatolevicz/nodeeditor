@@ -137,5 +137,8 @@ private:
     QColor m_coarseGridColor;
     QColor m_fineGridColor;
     QColor m_backgroundColor;
+
+    int _maxSize = 10000;
+    QPointF getCurrentPosition();
 };
 } // namespace QtNodes
