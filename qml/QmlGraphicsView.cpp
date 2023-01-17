@@ -445,7 +445,10 @@ QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData 
         _transformNode->fineGrid = new GridNode(m_fineGridColor, 16);
         _transformNode->coarseGrid = new GridNode(m_coarseGridColor, 16*10);
 
-        int maxSize = 250;
+        int maxSize = 32767;
+//        _transformNode->background->setRect(QRectF(-maxSize,-maxSize, maxSize*2, maxSize*2));
+//        _transformNode->fineGrid->setRect(QRectF(-maxSize,-maxSize, maxSize*2, maxSize*2));
+//        _transformNode->coarseGrid->setRect(QRectF(-maxSize,-maxSize, maxSize*2, maxSize*2));
         _transformNode->background->setRect(QRectF(0,0, maxSize, maxSize));
         _transformNode->fineGrid->setRect(QRectF(0,0, maxSize, maxSize));
         _transformNode->coarseGrid->setRect(QRectF(0,0, maxSize, maxSize));
@@ -453,9 +456,9 @@ QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData 
         _transformNode->appendChildNode(_transformNode->fineGrid);
         _transformNode->appendChildNode(_transformNode->coarseGrid);
 
-//        auto t = _transformNode->matrix().toTransform();
-//        t.translate(maxSize/2, maxSize/2);
-//        _transformNode->setMatrix(t);
+        auto t = _transformNode->matrix().toTransform();
+        t.translate( boundingRect().width()/2, boundingRect().height()/2);
+        _transformNode->setMatrix(t);
     }
 
     if (_geometryChanged) {
