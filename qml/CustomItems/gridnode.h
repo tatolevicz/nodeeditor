@@ -17,7 +17,7 @@ private:
     QSGFlatColorMaterial m_material;
     QSGGeometry m_geometry;
     QColor m_gridColor;
-    int _gridSize = 16;
+    int _gridSize;
 };
 
 #endif // GRIDNODE_H

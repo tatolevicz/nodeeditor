@@ -42,15 +42,15 @@ void GridNode::setRect(const QRectF &rect)
     // Then write the vertical lines
     for (int i=0; i<vCount; ++i)  {
         float dx = (i + 1) * _gridSize;
-        v[i*2].set(dx, y);
-        v[i*2+1].set(dx, y + h);
+        v[i*2].set(rect.x() + dx, y);
+        v[i*2+1].set(rect.x() + dx, y + h);
     }
     v += vCount * 2;
     // Then write the horizontal lines
     for (int i=0; i<hCount; ++i)  {
         float dy = (i + 1) * _gridSize;
-        v[i*2].set(x, dy);
-        v[i*2+1].set(x + w, dy);
+        v[i*2].set( x, rect.y() + dy);
+        v[i*2+1].set(x + w, rect.y() + dy);
     }
 
     // Tell the scenegraph we updated the geometry..

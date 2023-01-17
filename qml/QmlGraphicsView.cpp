@@ -445,13 +445,13 @@ QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData 
         _transformNode->fineGrid = new GridNode(m_fineGridColor, 16);
         _transformNode->coarseGrid = new GridNode(m_coarseGridColor, 16*10);
 
-        int maxSize = 32767;
-//        _transformNode->background->setRect(QRectF(-maxSize,-maxSize, maxSize*2, maxSize*2));
-//        _transformNode->fineGrid->setRect(QRectF(-maxSize,-maxSize, maxSize*2, maxSize*2));
-//        _transformNode->coarseGrid->setRect(QRectF(-maxSize,-maxSize, maxSize*2, maxSize*2));
-        _transformNode->background->setRect(QRectF(0,0, maxSize, maxSize));
-        _transformNode->fineGrid->setRect(QRectF(0,0, maxSize, maxSize));
-        _transformNode->coarseGrid->setRect(QRectF(0,0, maxSize, maxSize));
+        int maxSize = 1000;
+        _transformNode->background->setRect(QRectF(-maxSize,-maxSize, maxSize*2, maxSize*2));
+        _transformNode->fineGrid->setRect(QRectF(-maxSize,-maxSize, maxSize*2, maxSize*2));
+        _transformNode->coarseGrid->setRect(QRectF(-maxSize,-maxSize, maxSize*2, maxSize*2));
+//        _transformNode->background->setRect(QRectF(0,0, maxSize, maxSize));
+//        _transformNode->fineGrid->setRect(QRectF(0,0, maxSize, maxSize));
+//        _transformNode->coarseGrid->setRect(QRectF(0,0, maxSize, maxSize));
         _transformNode->appendChildNode(_transformNode->background);
         _transformNode->appendChildNode(_transformNode->fineGrid);
         _transformNode->appendChildNode(_transformNode->coarseGrid);
