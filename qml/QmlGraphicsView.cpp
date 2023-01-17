@@ -1,5 +1,6 @@
 #include "QmlGraphicsView.hpp"
 #include <QSGGeometryNode>
+#include "BackgroundNode.h"
 #include "gridnode.h"
 #include "QmlBasicGraphicsScene.hpp"
 #include "ConnectionGraphicsObject.hpp"
@@ -43,8 +44,10 @@ QmlGraphicsView::QmlGraphicsView(QQuickItem *parent)
 //    setRenderHint(QPainter::Antialiasing); -> solved
     setAntialiasing(true);
 
-//    auto const &flowViewStyle = StyleCollection::flowViewStyle();
-
+    auto const &flowViewStyle = StyleCollection::flowViewStyle();
+    m_backgroundColor = flowViewStyle.BackgroundColor;
+    m_coarseGridColor = flowViewStyle.CoarseGridColor;
+    m_fineGridColor = flowViewStyle.FineGridColor;
 //    setBackgroundBrush(flowViewStyle.BackgroundColor);
 
 //    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -437,10 +440,18 @@ QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData 
 
     if (!_transformNode) {
         _transformNode = new GraphNode();
-        _transformNode->grid = new GridNode(m_gridColor);
+        _transformNode->background = new BackgroundNode(m_backgroundColor);
+        _transformNode->fineGrid = new GridNode(m_fineGridColor, 16);
+        _transformNode->coarseGrid = new GridNode(m_coarseGridColor, 16*10);
+
         int maxSize = 250;
-        _transformNode->grid->setRect(QRectF(0,0, maxSize, maxSize));
-        _transformNode->appendChildNode(_transformNode->grid);
+        _transformNode->background->setRect(QRectF(0,0, maxSize, maxSize));
+        _transformNode->fineGrid->setRect(QRectF(0,0, maxSize, maxSize));
+        _transformNode->coarseGrid->setRect(QRectF(0,0, maxSize, maxSize));
+        _transformNode->appendChildNode(_transformNode->background);
+        _transformNode->appendChildNode(_transformNode->fineGrid);
+        _transformNode->appendChildNode(_transformNode->coarseGrid);
+
 //        auto t = _transformNode->matrix().toTransform();
 //        t.translate(maxSize/2, maxSize/2);
 //        _transformNode->setMatrix(t);
@@ -552,16 +563,44 @@ QPointF QmlGraphicsView::scenePastePosition()
     return mapToScene(origin);
 }
 
-const QColor &QmlGraphicsView::gridColor() const
+const QColor &QmlGraphicsView::backgroundColor() const
 {
-    return m_gridColor;
+    return m_backgroundColor;
 }
 
-void QmlGraphicsView::setGridColor(const QColor &newGridColor)
+void QmlGraphicsView::setBackgroundColor(const QColor &newColor)
 {
-    if (m_gridColor == newGridColor)
+    if (m_backgroundColor == newColor)
         return;
-    m_gridColor = newGridColor;
+    m_backgroundColor = newColor;
     update();
-    Q_EMIT gridColorChanged();
+    Q_EMIT backgroundColorChanged();
+}
+
+const QColor &QmlGraphicsView::fineGridColor() const
+{
+    return m_fineGridColor;
+}
+
+void QmlGraphicsView::setFineGridColor(const QColor &newGridColor)
+{
+    if (m_fineGridColor == newGridColor)
+        return;
+    m_fineGridColor = newGridColor;
+    update();
+    Q_EMIT fineGridColorChanged();
+}
+
+const QColor &QmlGraphicsView::coarseGridColor() const
+{
+    return m_coarseGridColor;
+}
+
+void QmlGraphicsView::setCoarseGridColor(const QColor &newGridColor)
+{
+    if (m_coarseGridColor == newGridColor)
+        return;
+    m_coarseGridColor = newGridColor;
+    update();
+    Q_EMIT coarseGridColorChanged();
 }

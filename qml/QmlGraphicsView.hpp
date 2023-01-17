@@ -7,11 +7,14 @@
 #include <QSGTransformNode>
 
 class GridNode;
+class BackgroundNode;
 
 class GraphNode : public QSGTransformNode
 {
 public:
-    GridNode *grid;
+    BackgroundNode * background;
+    GridNode *fineGrid;
+    GridNode *coarseGrid;
 };
 
 namespace QtNodes {
@@ -24,7 +27,9 @@ class QmlBasicGraphicsScene;
 class NODE_EDITOR_PUBLIC QmlGraphicsView : public QQuickItem
 {
     Q_OBJECT
-    Q_PROPERTY(QColor gridColor READ gridColor WRITE setGridColor NOTIFY gridColorChanged)
+    Q_PROPERTY(QColor backgroundColor READ backgroundColor WRITE setBackgroundColor NOTIFY backgroundColorChanged)
+    Q_PROPERTY(QColor fineGridColor READ fineGridColor WRITE setFineGridColor NOTIFY fineGridColorChanged)
+    Q_PROPERTY(QColor coarseGridColor READ coarseGridColor WRITE setCoarseGridColor NOTIFY coarseGridColorChanged)
 
 public:
     struct ScaleRange
@@ -33,14 +38,17 @@ public:
         double maximum = 0;
     };
 
-    const QColor &gridColor() const;
-    void setGridColor(const QColor &newBorderColor);
+    const QColor &backgroundColor() const;
+    const QColor &fineGridColor() const;
+    const QColor &coarseGridColor() const;
+
+    void setBackgroundColor(const QColor &newColor);
+    void setFineGridColor(const QColor &newColor);
+    void setCoarseGridColor(const QColor &newColor);
 
 
 public:
     QmlGraphicsView(QQuickItem *parent = Q_NULLPTR);
-
-
     QmlGraphicsView(QmlBasicGraphicsScene *scene, QQuickItem *parent = Q_NULLPTR);
 
     QmlGraphicsView(const QmlGraphicsView &) = delete;
@@ -77,7 +85,9 @@ public Q_SLOTS:
     void onPasteObjects();
 
 Q_SIGNALS:
-    void gridColorChanged();
+    void backgroundColorChanged();
+    void fineGridColorChanged();
+    void coarseGridColorChanged();
     void scaleChanged(double scale);
 
 protected:
@@ -123,6 +133,9 @@ private:
     ScaleRange _scaleRange;
     GraphNode *_transformNode{nullptr};
     bool _geometryChanged;
-    QColor m_gridColor;
+
+    QColor m_coarseGridColor;
+    QColor m_fineGridColor;
+    QColor m_backgroundColor;
 };
 } // namespace QtNodes

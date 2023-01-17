@@ -1,6 +1,6 @@
-// Copyright (C) 2017 The Qt Company Ltd.
-// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
-
+//
+// Created by Arthur Abel Motelevicz on 16/01/23.
+//
 #ifndef GRIDNODE_H
 #define GRIDNODE_H
 
@@ -10,14 +10,14 @@
 class GridNode : public QSGGeometryNode
 {
 public:
-    GridNode(QColor gridColor);
-
+    GridNode(QColor gridColor, int gridSize);
     void setRect(const QRectF &rect);
 
 private:
     QSGFlatColorMaterial m_material;
     QSGGeometry m_geometry;
     QColor m_gridColor;
+    int _gridSize = 16;
 };
 
 #endif // GRIDNODE_H

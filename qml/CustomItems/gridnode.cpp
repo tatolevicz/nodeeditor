@@ -1,15 +1,14 @@
-// Copyright (C) 2017 The Qt Company Ltd.
-// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
+//
+// Created by Arthur Abel Motelevicz on 16/01/23.
+//
 
 #include "gridnode.h"
-
 #include "qmath.h"
 
-#define GRID_SIZE 16
-
-GridNode::GridNode(QColor gridColor)
+GridNode::GridNode(QColor gridColor, int gridSize)
     : m_geometry(QSGGeometry::defaultAttributes_Point2D(), 0),
-    m_gridColor(gridColor)
+    m_gridColor(gridColor),
+    _gridSize(gridSize)
 {
     setGeometry(&m_geometry);
     m_geometry.setDrawingMode(QSGGeometry::DrawLines);
@@ -24,8 +23,8 @@ GridNode::GridNode(QColor gridColor)
  */
 void GridNode::setRect(const QRectF &rect)
 {
-    int vCount = int((rect.width() - 1) / GRID_SIZE);
-    int hCount = int((rect.height() - 1) / GRID_SIZE);
+    int vCount = int((rect.width() - 1) / _gridSize);
+    int hCount = int((rect.height() - 1) / _gridSize);
 
     int lineCount = vCount + hCount;
 
@@ -42,14 +41,14 @@ void GridNode::setRect(const QRectF &rect)
 
     // Then write the vertical lines
     for (int i=0; i<vCount; ++i)  {
-        float dx = (i + 1) * GRID_SIZE;
+        float dx = (i + 1) * _gridSize;
         v[i*2].set(dx, y);
         v[i*2+1].set(dx, y + h);
     }
     v += vCount * 2;
     // Then write the horizontal lines
     for (int i=0; i<hCount; ++i)  {
-        float dy = (i + 1) * GRID_SIZE;
+        float dy = (i + 1) * _gridSize;
         v[i*2].set(x, dy);
         v[i*2+1].set(x + w, dy);
     }

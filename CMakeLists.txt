@@ -92,7 +92,7 @@ set(CPP_SOURCE_FILES
   src/StyleCollection.cpp
   src/UndoCommands.cpp
   src/locateNode.cpp
-)
+        qml/CustomItems/BackgroundNode.cpp )
 
 set(HPP_HEADER_FILES
         qml/QmlBasicGraphicsScene.hpp
@@ -133,7 +133,7 @@ set(HPP_HEADER_FILES
   src/DefaultVerticalNodeGeometry.hpp
   src/NodeConnectionInteraction.hpp
   src/UndoCommands.hpp
-        )
+        qml/CustomItems/BackgroundNode.h)
 
 # If we want to give the option to build a static library,
 # set BUILD_SHARED_LIBS option to OFF

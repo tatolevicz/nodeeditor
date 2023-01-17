@@ -19,7 +19,9 @@ Window {
             clip: true
             GraphView{
                 id: flowView
-                gridColor: "#AAAAAA"
+//                fineGridColor: "blue"
+//                coarseGridColor: "red"
+//                backgroundColor: "yellow"
                 width: parent.width
                 height: parent.height
             }

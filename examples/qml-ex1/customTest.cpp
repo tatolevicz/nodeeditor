@@ -68,7 +68,7 @@ QSGNode *CustomTest::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
     QSGGeometry *geometry = nullptr;
 
     if (!oldNode) {
-        auto gridNode = new GridNode("#333333");
+        auto gridNode = new GridNode("#333333",  16);
         gridNode->setRect(boundingRect());
         node = gridNode;
 //        node = new QSGGeometryNode;
