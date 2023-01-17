@@ -396,11 +396,29 @@ void QmlGraphicsView::mouseMoveEvent(QMouseEvent *event)
             QPointF difference = (_clickPos - event->pos())*(-1)/t.m11();
             _clickPos = event->pos();
 
+            auto cp = getCurrentPosition();
+
+            if(cp.x() > _maxSize/4){
+                qDebug() << "O loco X!";
+                setCurrentPosition(QPointF(_maxSize, cp.y()));
+                return;
+            }
+
+            if(cp.x() < -_maxSize/4){
+                qDebug() << "O loco X!";
+                setCurrentPosition(QPointF(-_maxSize, cp.y()));
+                return;
+            }
+
+
+
+            if(cp.y() > _maxSize/4 || cp.y() < -_maxSize/4){
+                qDebug() << "O loco Y!";
+                return;
+            }
+
             t.translate(difference.x(), difference.y());
             _transformNode->setMatrix(t);
-            auto cpos = getCurrentPosition();
-            qDebug() << "X: " << cpos.x();
-            qDebug() << "Y: " << cpos.y();
             update();
         }
     }
@@ -614,8 +632,19 @@ QPointF QmlGraphicsView::getCurrentPosition(){
     QPointF out;
     auto t = _transformNode->matrix().toTransform();
 
-    out.setX(t.dx() - boundingRect().width()/2);
-    out.setY(t.dy() - boundingRect().height()/2);
+    out.setX(t.dx() + boundingRect().width()/2);
+    out.setY(t.dy() + boundingRect().height()/2);
 
     return  out;
+}
+
+void QmlGraphicsView::setCurrentPosition(const QPointF& newPos){
+    auto t = QTransform();
+    auto ct = _transformNode->matrix().toTransform();
+    t.scale(ct.m11(), ct.m11());
+    t.translate(
+        newPos.x() + boundingRect().width()/2,
+        newPos.y() + boundingRect().height()/2
+        );
+    _transformNode->setMatrix(t);
 }

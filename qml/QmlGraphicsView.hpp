@@ -140,5 +140,6 @@ private:
 
     int _maxSize = 10000;
     QPointF getCurrentPosition();
+    void setCurrentPosition(const QPointF& newPos);
 };
 } // namespace QtNodes
