@@ -630,10 +630,12 @@ void QmlGraphicsView::setCoarseGridColor(const QColor &newGridColor)
 QPointF QmlGraphicsView::getCurrentPosition(){
     QPointF out;
     auto t = _transformNode->matrix().toTransform();
-
-    out.setX(boundingRect().width()/2 - t.dx());
-    out.setY(boundingRect().height()/2 - t.dy());
-
+    auto scale = t.m11();
+    Q_UNUSED(scale)
+    out.setX((boundingRect().width()/2 - t.dx())/scale);
+    out.setY((boundingRect().height()/2- t.dy())/scale);
+//    out.setX(t.dx());
+//    out.setY(t.dy());
     return  out;
 }
 
