@@ -399,7 +399,7 @@ void QmlGraphicsView::mouseMoveEvent(QMouseEvent *event)
             _clickPos = event->pos();
 
             auto cp = getCurrentPosition();
-            qDebug() << "CurrentPosition X: " << cp.x();
+            qDebug() << "CurrentPosition X: " << cp.x() << " Y: " << cp.y();
 //            if(cp.x() > _maxSize/4){
 //                qDebug() << "O loco X!";
 //                setCurrentPosition(QPointF(_maxSize, cp.y()));
@@ -477,9 +477,9 @@ QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData 
         _transformNode->coarseGrid = new GridNode(m_coarseGridColor, 16*10);
 
 
-        _transformNode->background->setRect(QRectF(-_maxSize/2,-_maxSize/2, _maxSize, _maxSize));
-        _transformNode->fineGrid->setRect(QRectF(-_maxSize/2,-_maxSize/2, _maxSize, _maxSize));
-        _transformNode->coarseGrid->setRect(QRectF(-_maxSize/2,-_maxSize/2, _maxSize, _maxSize));
+        _transformNode->background->setRect(QRectF(-_maxSizeX/2,-_maxSizeY/2, _maxSizeX, _maxSizeY));
+        _transformNode->fineGrid->setRect(QRectF(-_maxSizeX/2,-_maxSizeY/2, _maxSizeX, _maxSizeY));
+        _transformNode->coarseGrid->setRect(QRectF(-_maxSizeX/2,-_maxSizeY/2, _maxSizeX, _maxSizeY));
         _transformNode->appendChildNode(_transformNode->background);
         _transformNode->appendChildNode(_transformNode->fineGrid);
         _transformNode->appendChildNode(_transformNode->coarseGrid);
@@ -488,6 +488,8 @@ QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData 
 //        t.translate( boundingRect().width()/2, boundingRect().height()/2);
 //        _transformNode->setMatrix(t);
         setCurrentPosition(QPointF(0,0));
+        auto cp = getCurrentPosition();
+        qDebug() << "CurrentPosition X: " << cp.x() << " Y: " << cp.y();
     }
 
     if (_geometryChanged) {
@@ -570,8 +572,11 @@ QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData 
 //}
 
 void QmlGraphicsView::onFirstShow(){
-    if(_maxSize < boundingRect().width() || _maxSize < boundingRect().height())
-        _maxSize = std::max(boundingRect().width(), boundingRect().height());
+    if(_maxSizeX < boundingRect().width())
+        _maxSizeX = boundingRect().width();
+
+    if(_maxSizeY < boundingRect().height())
+        _maxSizeY = boundingRect().height();
 }
 
 void QmlGraphicsView::showEvent(QShowEvent *event)
@@ -660,10 +665,10 @@ void QmlGraphicsView::setCurrentPosition(const QPointF& newPos){
     auto newX = newPos.x();
     auto newY = newPos.y();
 
-    auto xLeftLimit =   _maxSize/2 - boundingRect().width()/2;
-    auto yTopLimit =    _maxSize/2 - boundingRect().width()/2;
-    auto xRightLimit =  -(_maxSize/2 - boundingRect().width()/2);
-    auto yBottomLimit = -(_maxSize/2 - boundingRect().width()/2);
+    auto xLeftLimit =   _maxSizeX/2 - boundingRect().width()/2;
+    auto yTopLimit =    _maxSizeY/2 - boundingRect().height()/2;
+    auto xRightLimit =  -(_maxSizeX/2 - boundingRect().width()/2);
+    auto yBottomLimit = -(_maxSizeY/2 - boundingRect().height()/2);
 
     if(newX > xLeftLimit ) {
         newX = xLeftLimit;
@@ -680,7 +685,7 @@ void QmlGraphicsView::setCurrentPosition(const QPointF& newPos){
     }
 
     newX += boundingRect().width()/2;
-    newY += boundingRect().width()/2;
+    newY += boundingRect().height()/2;
 
     t.translate(
         newX,

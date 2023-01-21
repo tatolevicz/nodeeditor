@@ -142,7 +142,8 @@ private:
     QColor m_backgroundColor;
 
     //TODO:: put this on qml
-    qreal _maxSize = 2000;
+    qreal _maxSizeX = 300;
+    qreal _maxSizeY = 600;
     QPointF getCurrentPosition();
     void setCurrentPosition(const QPointF& newPos);
 };

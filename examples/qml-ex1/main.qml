@@ -3,7 +3,7 @@ import GraphEditor 1.0
 
 Window {
     width: 1000
-    height: 1000
+    height: 500
     visible: true
     title: qsTr("Hello World")
     Rectangle{
