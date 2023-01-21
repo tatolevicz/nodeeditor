@@ -401,7 +401,7 @@ void QmlGraphicsView::mouseMoveEvent(QMouseEvent *event)
             _clickPos = event->pos();
 
             auto cp = getCurrentPosition();
-            qDebug() << "CurrentPosition X: " << cp.x() << " Y: " << cp.y();
+            plotViewPortPosition();
             setCurrentPosition(cp + difference);
 
         }
@@ -467,8 +467,8 @@ QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData 
 //        t.translate( boundingRect().width()/2, boundingRect().height()/2);
 //        _transformNode->setMatrix(t);
         setCurrentPosition(QPointF(0,0));
-        auto cp = getCurrentPosition();
-        qDebug() << "CurrentPosition X: " << cp.x() << " Y: " << cp.y();
+//        auto cp = getCurrentPosition();
+        plotViewPortPosition();
     }
 
     if (_geometryChanged) {
@@ -683,24 +683,29 @@ void QmlGraphicsView::plotViewPortPosition(){
     auto rect = boundingRect();
     auto scale = _transformNode->matrix().toTransform().m11();
 
+    qDebug() << "Current X: " <<
+        cp.x() <<
+        " Y: " <<
+        cp.y();
+
     qDebug() << "Scale: " << scale;
 
-    qDebug() << "PosTopLeft X: " <<
+    qDebug() << "TopLeft X: " <<
         cp.x() - (rect.width()/2)/scale <<
         " Y: " <<
         cp.y() - (rect.height()/2)/scale;
 
-    qDebug() << "PosTopRight X: " <<
+    qDebug() << "TopRight X: " <<
         cp.x() + (rect.width()/2)/scale <<
         " Y: " <<
         cp.y() - (rect.height()/2)/scale;
 
-    qDebug() << "PosBottomLeft X: " <<
+    qDebug() << "BottomLeft X: " <<
         cp.x() - (rect.width()/2)/scale <<
         " Y: " <<
         cp.y() + (rect.height()/2)/scale;
 
-    qDebug() << "PosBottomRight X: " <<
+    qDebug() << "BottomRight X: " <<
         cp.x() + (rect.width()/2)/scale <<
         " Y: " <<
         cp.y() + (rect.height()/2)/scale;
