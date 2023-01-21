@@ -397,29 +397,32 @@ void QmlGraphicsView::mouseMoveEvent(QMouseEvent *event)
             _clickPos = event->pos();
 
             auto cp = getCurrentPosition();
+            qDebug() << "CurrentPosition X: " << cp.x();
+//            if(cp.x() > _maxSize/4){
+//                qDebug() << "O loco X!";
+//                setCurrentPosition(QPointF(_maxSize, cp.y()));
+//                return;
+//            }
+//
+//            if(cp.x() < -_maxSize/4){
+//                qDebug() << "O loco X!";
+//                setCurrentPosition(QPointF(-_maxSize, cp.y()));
+//                return;
+//            }
+//
+//
+//
+//            if(cp.y() > _maxSize/4 || cp.y() < -_maxSize/4){
+//                qDebug() << "O loco Y!";
+//                return;
+//            }
 
-            if(cp.x() > _maxSize/4){
-                qDebug() << "O loco X!";
-                setCurrentPosition(QPointF(_maxSize, cp.y()));
-                return;
-            }
+//            t.translate(difference.x(), difference.y());
+//            _transformNode->setMatrix(t);
+//            update();
 
-            if(cp.x() < -_maxSize/4){
-                qDebug() << "O loco X!";
-                setCurrentPosition(QPointF(-_maxSize, cp.y()));
-                return;
-            }
+            setCurrentPosition(cp + difference);
 
-
-
-            if(cp.y() > _maxSize/4 || cp.y() < -_maxSize/4){
-                qDebug() << "O loco Y!";
-                return;
-            }
-
-            t.translate(difference.x(), difference.y());
-            _transformNode->setMatrix(t);
-            update();
         }
     }
 
@@ -475,9 +478,10 @@ QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData 
         _transformNode->appendChildNode(_transformNode->fineGrid);
         _transformNode->appendChildNode(_transformNode->coarseGrid);
 
-        auto t = _transformNode->matrix().toTransform();
-        t.translate( boundingRect().width()/2, boundingRect().height()/2);
-        _transformNode->setMatrix(t);
+//        auto t = _transformNode->matrix().toTransform();
+//        t.translate( boundingRect().width()/2, boundingRect().height()/2);
+//        _transformNode->setMatrix(t);
+        setCurrentPosition(QPointF(0,0));
     }
 
     if (_geometryChanged) {
@@ -632,8 +636,8 @@ QPointF QmlGraphicsView::getCurrentPosition(){
     QPointF out;
     auto t = _transformNode->matrix().toTransform();
 
-    out.setX(t.dx() + boundingRect().width()/2);
-    out.setY(t.dy() + boundingRect().height()/2);
+    out.setX(t.dx() - boundingRect().width()/2);
+    out.setY(t.dy() - boundingRect().height()/2);
 
     return  out;
 }
@@ -642,9 +646,31 @@ void QmlGraphicsView::setCurrentPosition(const QPointF& newPos){
     auto t = QTransform();
     auto ct = _transformNode->matrix().toTransform();
     t.scale(ct.m11(), ct.m11());
+    auto newX = newPos.x() + boundingRect().width()/2;
+    auto newY = newPos.y() + boundingRect().width()/2;
+    auto xLeftLimit =  (_maxSize/2);
+    auto yTopLimit =  (_maxSize/2 );
+    auto xRightLimit =  (-_maxSize/2);
+    auto yBottomLimit =  (-_maxSize/2);
+    if(newX > xLeftLimit ) {
+        newX = xLeftLimit;
+    }
+    else if(newX < xRightLimit ) {
+        newX = xRightLimit;
+    }
+
+    if(newY > yTopLimit ) {
+        newY = yTopLimit;
+    }
+    else if(newY < yBottomLimit ) {
+        newY = yBottomLimit;
+    }
+
     t.translate(
-        newPos.x() + boundingRect().width()/2,
-        newPos.y() + boundingRect().height()/2
-        );
+        newX,
+        newY
+    );
+
     _transformNode->setMatrix(t);
+    update();
 }

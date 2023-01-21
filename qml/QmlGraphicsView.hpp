@@ -138,7 +138,7 @@ private:
     QColor m_fineGridColor;
     QColor m_backgroundColor;
 
-    int _maxSize = 10000;
+    int _maxSize = 500;
     QPointF getCurrentPosition();
     void setCurrentPosition(const QPointF& newPos);
 };
