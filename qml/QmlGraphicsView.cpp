@@ -397,13 +397,11 @@ void QmlGraphicsView::mouseMoveEvent(QMouseEvent *event)
         if ((event->modifiers() & Qt::ShiftModifier) == 0) {
             auto t = _transformNode->matrix().toTransform();
             Q_UNUSED(t)
-            QPointF difference = (_clickPos - event->pos())*(-1);///t.m11();
+            QPointF difference = (_clickPos - event->pos());///t.m11();
             _clickPos = event->pos();
 
             auto cp = getCurrentPosition();
             qDebug() << "CurrentPosition X: " << cp.x() << " Y: " << cp.y();
-            qDebug() << "Diff X: " << difference.x() << " Y: " << difference.y();
-
             setCurrentPosition(cp + difference);
 
         }
@@ -633,8 +631,8 @@ QPointF QmlGraphicsView::getCurrentPosition(){
     QPointF out;
     auto t = _transformNode->matrix().toTransform();
 
-    out.setX(t.dx() - boundingRect().width()/2);
-    out.setY(t.dy() - boundingRect().height()/2);
+    out.setX(boundingRect().width()/2 - t.dx());
+    out.setY(boundingRect().height()/2 - t.dy());
 
     return  out;
 }
@@ -647,31 +645,31 @@ void QmlGraphicsView::setCurrentPosition(const QPointF& newPos){
     auto newX = newPos.x();
     auto newY = newPos.y();
 
-    auto xLeftLimit =   _maxSizeX/2 - boundingRect().width()/2;
-    auto yTopLimit =    _maxSizeY/2 - boundingRect().height()/2;
-    auto xRightLimit =  -(_maxSizeX/2 - boundingRect().width()/2);
-    auto yBottomLimit = -(_maxSizeY/2 - boundingRect().height()/2);
+    auto xLeftLimit =   -_maxSizeX/2 + boundingRect().width()/2;
+    auto yTopLimit =    -_maxSizeY/2 + boundingRect().height()/2;
+    auto xRightLimit =  _maxSizeX/2 - boundingRect().width()/2;
+    auto yBottomLimit = _maxSizeY/2 - boundingRect().height()/2;
 
-    if(newX > xLeftLimit ) {
+    if(newX < xLeftLimit ) {
         newX = xLeftLimit;
     }
-    else if(newX < xRightLimit ) {
+    else if(newX > xRightLimit ) {
         newX = xRightLimit;
     }
 
-    if(newY > yTopLimit ) {
+    if(newY < yTopLimit ) {
         newY = yTopLimit;
     }
-    else if(newY < yBottomLimit ) {
+    else if(newY > yBottomLimit ) {
         newY = yBottomLimit;
     }
 
-    newX += (boundingRect().width()/2);
-    newY += (boundingRect().height()/2);
+    newX -= (boundingRect().width()/2);
+    newY -= (boundingRect().height()/2);
 
     t.translate(
-        newX,
-        newY
+        -newX,
+        -newY
     );
 
     _transformNode->setMatrix(t);
