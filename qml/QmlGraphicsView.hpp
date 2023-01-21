@@ -142,9 +142,11 @@ private:
     QColor m_backgroundColor;
 
     //TODO:: put this on qml
-    qreal _maxSizeX = 10000;
-    qreal _maxSizeY = 10000;
+    qreal _maxSizeX = 2000;
+    qreal _maxSizeY = 2000;
     QPointF getCurrentPosition();
     void setCurrentPosition(const QPointF& newPos);
+
+    void plotViewPortPosition();
 };
 } // namespace QtNodes

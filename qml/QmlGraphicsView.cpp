@@ -204,6 +204,8 @@ void QmlGraphicsView::wheelEvent(QWheelEvent *event)
         scaleUp();
     else
         scaleDown();
+
+    plotViewPortPosition();
 }
 
 double QmlGraphicsView::getScale() const
@@ -246,7 +248,7 @@ void QmlGraphicsView::scaleUp()
 //    scale(factor, factor);
 //    Q_EMIT scaleChanged(transform().m11());
 
-    double const step = 1.1;
+    double const step = 1.05;
 //    double const factor = std::pow(step, 1.1);
     QTransform t = _transformNode->matrix().toTransform();
 
@@ -280,7 +282,7 @@ void QmlGraphicsView::scaleDown()
 //    scale(factor, factor);
 //    Q_EMIT scaleChanged(transform().m11());
 
-    double const step = 0.9;
+    double const step = 0.95;
 //    double const factor = std::pow(step, 0.9);
     QTransform t = _transformNode->matrix().toTransform();
 
@@ -394,34 +396,13 @@ void QmlGraphicsView::mouseMoveEvent(QMouseEvent *event)
         // Make sure shift is not being pressed
         if ((event->modifiers() & Qt::ShiftModifier) == 0) {
             auto t = _transformNode->matrix().toTransform();
-
-            QPointF difference = (_clickPos - event->pos())*(-1)/t.m11();
+            Q_UNUSED(t)
+            QPointF difference = (_clickPos - event->pos())*(-1);///t.m11();
             _clickPos = event->pos();
 
             auto cp = getCurrentPosition();
             qDebug() << "CurrentPosition X: " << cp.x() << " Y: " << cp.y();
-//            if(cp.x() > _maxSize/4){
-//                qDebug() << "O loco X!";
-//                setCurrentPosition(QPointF(_maxSize, cp.y()));
-//                return;
-//            }
-//
-//            if(cp.x() < -_maxSize/4){
-//                qDebug() << "O loco X!";
-//                setCurrentPosition(QPointF(-_maxSize, cp.y()));
-//                return;
-//            }
-//
-//
-//
-//            if(cp.y() > _maxSize/4 || cp.y() < -_maxSize/4){
-//                qDebug() << "O loco Y!";
-//                return;
-//            }
-
-//            t.translate(difference.x(), difference.y());
-//            _transformNode->setMatrix(t);
-//            update();
+            qDebug() << "Diff X: " << difference.x() << " Y: " << difference.y();
 
             setCurrentPosition(cp + difference);
 
@@ -662,6 +643,7 @@ void QmlGraphicsView::setCurrentPosition(const QPointF& newPos){
     auto t = QTransform();
     auto ct = _transformNode->matrix().toTransform();
     t.scale(ct.m11(), ct.m11());
+
     auto newX = newPos.x();
     auto newY = newPos.y();
 
@@ -684,8 +666,8 @@ void QmlGraphicsView::setCurrentPosition(const QPointF& newPos){
         newY = yBottomLimit;
     }
 
-    newX += boundingRect().width()/2;
-    newY += boundingRect().height()/2;
+    newX += (boundingRect().width()/2);
+    newY += (boundingRect().height()/2);
 
     t.translate(
         newX,
@@ -694,4 +676,34 @@ void QmlGraphicsView::setCurrentPosition(const QPointF& newPos){
 
     _transformNode->setMatrix(t);
     update();
+
+//    plotViewPortPosition();
+}
+
+void QmlGraphicsView::plotViewPortPosition(){
+    auto cp = getCurrentPosition();
+    auto rect = boundingRect();
+    auto scale = _transformNode->matrix().toTransform().m11();
+
+    qDebug() << "Scale: " << scale;
+
+    qDebug() << "PosTopLeft X: " <<
+        cp.x() - (rect.width()/2)/scale <<
+        " Y: " <<
+        cp.y() - (rect.height()/2)/scale;
+
+    qDebug() << "PosTopRight X: " <<
+        cp.x() + (rect.width()/2)/scale <<
+        " Y: " <<
+        cp.y() - (rect.height()/2)/scale;
+
+    qDebug() << "PosBottomLeft X: " <<
+        cp.x() - (rect.width()/2)/scale <<
+        " Y: " <<
+        cp.y() + (rect.height()/2)/scale;
+
+    qDebug() << "PosBottomRight X: " <<
+        cp.x() + (rect.width()/2)/scale <<
+        " Y: " <<
+        cp.y() + (rect.height()/2)/scale;
 }
