@@ -115,6 +115,9 @@ protected:
 
     void showEvent(QShowEvent *event);
 
+    void onFirstShow();
+    bool _firstShowed = false;
+
 protected:
     QmlBasicGraphicsScene *_scene;
     QmlBasicGraphicsScene *nodeScene();
@@ -138,7 +141,8 @@ private:
     QColor m_fineGridColor;
     QColor m_backgroundColor;
 
-    int _maxSize = 500;
+    //TODO:: put this on qml
+    qreal _maxSize = 2000;
     QPointF getCurrentPosition();
     void setCurrentPosition(const QPointF& newPos);
 };

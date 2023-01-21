@@ -2,8 +2,8 @@ import QtQuick
 import GraphEditor 1.0
 
 Window {
-    width: 640
-    height: 480
+    width: 1000
+    height: 1000
     visible: true
     title: qsTr("Hello World")
     Rectangle{
