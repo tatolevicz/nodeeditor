@@ -1,12 +1,13 @@
 #include "QmlGraphicsView.hpp"
-#include <QSGGeometryNode>
-#include "BackgroundNode.h"
-#include "gridnode.h"
-#include "QmlBasicGraphicsScene.hpp"
 #include "ConnectionGraphicsObject.hpp"
+#include "CustomNodes/BackgroundNode.h"
+#include "CustomNodes/gridnode.h"
 #include "NodeGraphicsObject.hpp"
+#include "QmlBasicGraphicsScene.hpp"
 #include "StyleCollection.hpp"
 #include "UndoCommands.hpp"
+#include <QSGGeometryNode>
+#include "TestNodeItem.h"
 
 #include <QQuickPaintedItem>
 
@@ -27,6 +28,7 @@
 
 using QtNodes::QmlBasicGraphicsScene;
 using QtNodes::QmlGraphicsView;
+using QtNodes::TestNodeItem;
 
 QmlGraphicsView::QmlGraphicsView(QQuickItem *parent)
     : QQuickItem(parent)
@@ -36,6 +38,8 @@ QmlGraphicsView::QmlGraphicsView(QQuickItem *parent)
     , _copySelectionAction(Q_NULLPTR)
     , _pasteAction(Q_NULLPTR)
 {
+    _transformNode = new GraphNode();
+
     setFlag(ItemHasContents, true);
     setAcceptedMouseButtons(Qt::MouseButton::LeftButton);
 //    setDragMode(QQmlGraphicsView::ScrollHandDrag); -> solved
@@ -254,10 +258,10 @@ void QmlGraphicsView::scaleUp()
 
     if (_scaleRange.maximum > 0) {
         t.scale(step, step);
-        if (t.m11() >= _scaleRange.maximum) {
-            setupScale(t.m11());
-            return;
-        }
+//        if (t.m11() >= _scaleRange.maximum) {
+//            setupScale(t.m11());
+//            return;
+//        }
     }
 
     _transformNode->setMatrix(t);
@@ -288,10 +292,10 @@ void QmlGraphicsView::scaleDown()
 
     if (_scaleRange.minimum > 0) {
         t.scale(step, step);
-        if (t.m11() <= _scaleRange.minimum) {
-            setupScale(t.m11());
-            return;
-        }
+//        if (t.m11() <= _scaleRange.minimum) {
+//            setupScale(t.m11());
+//            return;
+//        }
     }
 
     _transformNode->setMatrix(t);
@@ -438,19 +442,19 @@ QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData 
 {
     if(!_firstShowed) {
         onFirstShow();
-        _firstShowed = true;
+//        _firstShowed = true;
     }
-    _transformNode = static_cast<GraphNode *>(oldNode);
-
+//    _transformNode = static_cast<GraphNode *>(oldNode);
+    Q_UNUSED(oldNode)
     QRectF rect = boundingRect();
 
     if (rect.isEmpty()) {
-        delete _transformNode;
+//        delete _transformNode;
         return nullptr;
     }
 
-    if (!_transformNode) {
-        _transformNode = new GraphNode();
+    if (!_transformNode->background) {
+//        _transformNode = new GraphNode();
         _transformNode->background = new BackgroundNode(m_backgroundColor);
         _transformNode->fineGrid = new GridNode(m_fineGridColor, 16);
         _transformNode->coarseGrid = new GridNode(m_coarseGridColor, 16*10);
@@ -476,6 +480,11 @@ QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData 
     }
 
     _geometryChanged = false;
+
+    if(!_firstShowed) {
+        _firstShowed = true;
+        onFirstShow();
+    }
 
     return _transformNode;
 //    QSGGeometryNode *node = nullptr;
@@ -556,6 +565,18 @@ void QmlGraphicsView::onFirstShow(){
 
     if(_maxSizeY < boundingRect().height())
         _maxSizeY = boundingRect().height();
+
+
+//    if(_firstShowed) {
+//        for (auto c : childItems()) {
+//            if (auto testItem = dynamic_cast<TestNodeItem *>(c)) {
+//                qDebug() << "Child: " << c;
+//                _transformNode->appendChildNode(testItem->getNode());
+//                testItem->setX(boundingRect().width()/2);
+//                testItem->setY(boundingRect().height()/2);
+//            }
+//        }
+//    }
 }
 
 void QmlGraphicsView::showEvent(QShowEvent *event)
@@ -647,24 +668,24 @@ void QmlGraphicsView::setCurrentPosition(const QPointF& newPos){
     auto newX = newPos.x();
     auto newY = newPos.y();
 
-    auto xLeftLimit =   -_maxSizeX/2 + boundingRect().width()/2;
-    auto yTopLimit =    -_maxSizeY/2 + boundingRect().height()/2;
-    auto xRightLimit =  _maxSizeX/2 - boundingRect().width()/2;
-    auto yBottomLimit = _maxSizeY/2 - boundingRect().height()/2;
-
-    if(newX < xLeftLimit ) {
-        newX = xLeftLimit;
-    }
-    else if(newX > xRightLimit ) {
-        newX = xRightLimit;
-    }
-
-    if(newY < yTopLimit ) {
-        newY = yTopLimit;
-    }
-    else if(newY > yBottomLimit ) {
-        newY = yBottomLimit;
-    }
+//    auto xLeftLimit =   -_maxSizeX/2 + boundingRect().width()/2;
+//    auto yTopLimit =    -_maxSizeY/2 + boundingRect().height()/2;
+//    auto xRightLimit =  _maxSizeX/2 - boundingRect().width()/2;
+//    auto yBottomLimit = _maxSizeY/2 - boundingRect().height()/2;
+//
+//    if(newX < xLeftLimit ) {
+//        newX = xLeftLimit;
+//    }
+//    else if(newX > xRightLimit ) {
+//        newX = xRightLimit;
+//    }
+//
+//    if(newY < yTopLimit ) {
+//        newY = yTopLimit;
+//    }
+//    else if(newY > yBottomLimit ) {
+//        newY = yBottomLimit;
+//    }
 
     newX -= (boundingRect().width()/2);
     newY -= (boundingRect().height()/2);
@@ -674,6 +695,15 @@ void QmlGraphicsView::setCurrentPosition(const QPointF& newPos){
         -newY
     );
 
+    for (auto c : childItems()) {
+        if (auto testItem = dynamic_cast<TestNodeItem *>(c)) {
+//            qDebug() << "Child: " << c;
+//            _transformNode->appendChildNode(testItem->getNode());
+            testItem->setX(t.dx());
+            testItem->setY(t.dy());
+        }
+    }
+
     _transformNode->setMatrix(t);
     update();
 
@@ -681,34 +711,60 @@ void QmlGraphicsView::setCurrentPosition(const QPointF& newPos){
 }
 
 void QmlGraphicsView::plotViewPortPosition(){
-    auto cp = getCurrentPosition();
-    auto rect = boundingRect();
-    auto scale = _transformNode->matrix().toTransform().m11();
+//    auto cp = getCurrentPosition();
+//    auto rect = boundingRect();
+    auto t = _transformNode->matrix().toTransform();
+//
+//    auto scale = t.m11();
 
-    qDebug() << "Current X: " <<
-        cp.x() <<
+    Q_UNUSED(t);
+    QRectF respRect = _transformNode->background->getRect();
+    respRect = mapToGridScene(respRect);
+
+
+    qDebug() << "My Map X: " <<
+        respRect.x() <<
         " Y: " <<
-        cp.y();
+        respRect.y() <<
+        " W: " <<
+        respRect.width();
 
-    qDebug() << "Scale: " << scale;
+//    qDebug() << "Current X: " <<
+//        cp.x() <<
+//        " Y: " <<
+//        cp.y();
+//
+//    qDebug() << "Scale: " << scale;
+//
+//    qDebug() << "TopLeft X: " <<
+//        cp.x() - (rect.width()/2)/scale <<
+//        " Y: " <<
+//        cp.y() - (rect.height()/2)/scale;
+//
+//    qDebug() << "TopRight X: " <<
+//        cp.x() + (rect.width()/2)/scale <<
+//        " Y: " <<
+//        cp.y() - (rect.height()/2)/scale;
+//
+//    qDebug() << "BottomLeft X: " <<
+//        cp.x() - (rect.width()/2)/scale <<
+//        " Y: " <<
+//        cp.y() + (rect.height()/2)/scale;
+//
+//    qDebug() << "BottomRight X: " <<
+//        cp.x() + (rect.width()/2)/scale <<
+//        " Y: " <<
+//        cp.y() + (rect.height()/2)/scale;
+}
 
-    qDebug() << "TopLeft X: " <<
-        cp.x() - (rect.width()/2)/scale <<
-        " Y: " <<
-        cp.y() - (rect.height()/2)/scale;
-
-    qDebug() << "TopRight X: " <<
-        cp.x() + (rect.width()/2)/scale <<
-        " Y: " <<
-        cp.y() - (rect.height()/2)/scale;
-
-    qDebug() << "BottomLeft X: " <<
-        cp.x() - (rect.width()/2)/scale <<
-        " Y: " <<
-        cp.y() + (rect.height()/2)/scale;
-
-    qDebug() << "BottomRight X: " <<
-        cp.x() + (rect.width()/2)/scale <<
-        " Y: " <<
-        cp.y() + (rect.height()/2)/scale;
+QRectF QmlGraphicsView::mapToGridScene(const QRectF& inRect){
+    auto t = _transformNode->matrix().toTransform();
+    //get just the new scale size and reset positions
+    QRectF auxRect = t.mapRect(inRect);
+    QRectF out = auxRect;
+    out.setX(inRect.x());
+    out.setY(inRect.y());
+    out.setWidth(auxRect.width());
+    out.setHeight(auxRect.height());
+    return out;
 }

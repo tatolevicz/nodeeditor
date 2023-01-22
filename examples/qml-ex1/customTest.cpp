@@ -3,10 +3,10 @@
 //
 
 #include "customTest.h"
+#include "CustomNodes/gridnode.h"
 #include <QSGFlatColorMaterial>
-#include <QSGVertexColorMaterial>
 #include <QSGGeometryNode>
-#include "gridnode.h"
+#include <QSGVertexColorMaterial>
 
 CustomTest::CustomTest(QQuickItem *parent)
     : QQuickItem(parent)

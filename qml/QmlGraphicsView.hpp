@@ -148,5 +148,6 @@ private:
     void setCurrentPosition(const QPointF& newPos);
 
     void plotViewPortPosition();
+    QRectF mapToGridScene(const QRectF& inRect);
 };
 } // namespace QtNodes

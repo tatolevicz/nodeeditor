@@ -29,7 +29,7 @@
 #include <QtNodes/ConnectionStyle>
 #include <QtNodes/QmlGraphicsView>
 #include <QtNodes/StyleCollection>
-
+#include "TestNodeItem.h"
 #include <QAction>
 #include <QScreen>
 #include <QtWidgets/QApplication>
@@ -39,6 +39,8 @@
 using QtNodes::QmlBasicGraphicsScene;
 using QtNodes::ConnectionStyle;
 using QtNodes::QmlGraphicsView;
+using QtNodes::TestNodeItem;
+
 using QtNodes::GraphicsView;
 using QtNodes::BasicGraphicsScene;
 using QtNodes::NodeRole;
@@ -54,6 +56,7 @@ int main(int argc, char *argv[])
 
 //    qmlRegisterType<QmlBasicGraphicsScene>("GraphEditor", 1, 0, "Ellipse");
     qmlRegisterType<QmlGraphicsView>("GraphEditor", 1, 0, "GraphView");
+    qmlRegisterType<TestNodeItem>("GraphEditor", 1, 0, "TestNodeItem");
 
 
     QQmlApplicationEngine engine;

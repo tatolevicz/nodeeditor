@@ -4,8 +4,8 @@
 #ifndef GRIDNODE_H
 #define GRIDNODE_H
 
-#include <QtQuick/QSGGeometryNode>
-#include <QtQuick/QSGFlatColorMaterial>
+#include <QSGFlatColorMaterial>
+#include <QSGGeometryNode>
 
 class GridNode : public QSGGeometryNode
 {

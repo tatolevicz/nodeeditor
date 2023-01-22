@@ -5,8 +5,8 @@
 #ifndef QTNODESLIBRARY_BACKGROUNDNODE_H
 #define QTNODESLIBRARY_BACKGROUNDNODE_H
 
-#include <QtQuick/QSGGeometryNode>
-#include <QtQuick/QSGFlatColorMaterial>
+#include <QSGFlatColorMaterial>
+#include <QSGGeometryNode>
 
 class BackgroundNode : public QSGGeometryNode
 {

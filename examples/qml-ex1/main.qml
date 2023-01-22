@@ -27,6 +27,23 @@ Window {
 //                backgroundColor: "yellow"
                 width: parent.width
                 height: parent.height
+                TestNodeItem
+                {
+                    id: testRect
+                    width: 100
+                    height: 100
+                    backgroundColor: "blue"
+                    x: 0
+                    y: 0
+                     Rectangle
+                    {
+                        id: summy
+                        width: 100
+                        height: 100
+                        color: "pink"
+                    }
+                }
+
             }
         }
 //    }

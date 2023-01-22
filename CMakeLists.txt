@@ -67,7 +67,7 @@ set(CMAKE_AUTOMOC ON)
 set(CPP_SOURCE_FILES
         qml/QmlGraphicsView.cpp
         qml/QmlBasicGraphicsScene.cpp
-        qml/CustomItems/gridnode.cpp
+        qml/CustomNodes/gridnode.cpp
   src/AbstractGraphModel.cpp
   src/AbstractNodeGeometry.cpp
   src/BasicGraphicsScene.cpp
@@ -92,12 +92,13 @@ set(CPP_SOURCE_FILES
   src/StyleCollection.cpp
   src/UndoCommands.cpp
   src/locateNode.cpp
-        qml/CustomItems/BackgroundNode.cpp )
+        qml/CustomNodes/BackgroundNode.cpp
+        qml/CustomItems/TestNodeItem.cpp )
 
 set(HPP_HEADER_FILES
         qml/QmlBasicGraphicsScene.hpp
         qml/QmlGraphicsView.hpp
-        qml/CustomItems/gridnode.h
+        qml/CustomNodes/gridnode.h
   include/QtNodes/internal/AbstractGraphModel.hpp
   include/QtNodes/internal/AbstractNodeGeometry.hpp
   include/QtNodes/internal/AbstractNodePainter.hpp
@@ -133,7 +134,8 @@ set(HPP_HEADER_FILES
   src/DefaultVerticalNodeGeometry.hpp
   src/NodeConnectionInteraction.hpp
   src/UndoCommands.hpp
-        qml/CustomItems/BackgroundNode.h)
+        qml/CustomNodes/BackgroundNode.h
+        qml/CustomItems/TestNodeItem.h)
 
 # If we want to give the option to build a static library,
 # set BUILD_SHARED_LIBS option to OFF
@@ -152,6 +154,7 @@ target_include_directories(QtNodes
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/qml>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/qml/CustomItems>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/qml/CustomNodes>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/QtNodes/internal>
   PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
