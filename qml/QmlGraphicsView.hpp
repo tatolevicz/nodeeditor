@@ -145,6 +145,8 @@ private:
     qreal _maxSizeX = 2000;
     qreal _maxSizeY = 2000;
     QPointF getCurrentPosition();
+    QPointF _deltaMove;
+    QPointF _lastPos;
     void setCurrentPosition(const QPointF& newPos);
 
     void plotViewPortPosition();

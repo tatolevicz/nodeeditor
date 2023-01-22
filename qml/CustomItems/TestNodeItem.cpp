@@ -25,9 +25,6 @@ TestNodeItem::TestNodeItem(QQuickItem *parent)
     setAcceptedMouseButtons(Qt::MouseButton::LeftButton);
     setAcceptHoverEvents(true);
     setAntialiasing(true);
-
-    _node = new BackgroundNode(QColor(m_backgroundColor));
-
 }
 
 void TestNodeItem::keyPressEvent(QKeyEvent *event)
@@ -117,17 +114,17 @@ QSGNode* TestNodeItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
         onFirstShow();
         _firstShowed = true;
     }
-//    _node = static_cast<BackgroundNode *>(oldNode);
+    _node = static_cast<BackgroundNode *>(oldNode);
     Q_UNUSED(oldNode);
     QRectF rect = boundingRect();
 
     if (rect.isEmpty()) {
-//        delete _node;
+        delete _node;
         return nullptr;
     }
 
-    if (_node->getRect().width() == 0) {
-//        _node = new BackgroundNode(QColor(m_backgroundColor));
+    if (!_node) {
+        _node = new BackgroundNode(QColor(m_backgroundColor));
         _node->setRect(rect);
     }
 

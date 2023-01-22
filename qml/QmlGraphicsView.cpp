@@ -695,15 +695,18 @@ void QmlGraphicsView::setCurrentPosition(const QPointF& newPos){
         -newY
     );
 
+    _deltaMove.setX(t.dx() - _lastPos.x());
+    _deltaMove.setY(t.dy() - _lastPos.y());
+    _lastPos.setX(t.dx());
+    _lastPos.setY(t.dy());
+
     for (auto c : childItems()) {
         if (auto testItem = dynamic_cast<TestNodeItem *>(c)) {
-//            qDebug() << "Child: " << c;
-//            _transformNode->appendChildNode(testItem->getNode());
-            testItem->setX(t.dx());
-            testItem->setY(t.dy());
+            testItem->setX(testItem->x() + _deltaMove.x());
+            testItem->setY(testItem->y() + _deltaMove.y());
         }
     }
-
+    
     _transformNode->setMatrix(t);
     update();
 
