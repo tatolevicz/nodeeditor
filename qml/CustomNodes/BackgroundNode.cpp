@@ -13,13 +13,16 @@ BackgroundNode::BackgroundNode(QColor fillColor)
     setMaterial(&m_material);
     m_material.setColor(m_fillColor);
 }
-
+QRectF BackgroundNode::getRect(){
+    return _rect;
+}
 /*
  * The function hardcodes a fixed set of grid lines and scales
  * those to the bounding rect.
  */
 void BackgroundNode::setRect(const QRectF &rect)
 {
+    _rect = rect;
     QSGGeometry *g = geometry();
 
     float x = rect.x();

@@ -16,13 +16,16 @@ GridNode::GridNode(QColor gridColor, int gridSize)
     setMaterial(&m_material);
     m_material.setColor(m_gridColor);
 }
-
+QRectF GridNode::getRect(){
+    return _rect;
+}
 /*
  * The function hardcodes a fixed set of grid lines and scales
  * those to the bounding rect.
  */
 void GridNode::setRect(const QRectF &rect)
 {
+    _rect = rect;
     int vCount = int((rect.width() - 1) / _gridSize);
     int hCount = int((rect.height() - 1) / _gridSize);
 
