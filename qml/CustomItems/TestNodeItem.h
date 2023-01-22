@@ -63,6 +63,7 @@ protected:
 protected:
 
 private:
+    QPointF _difference;
     QPointF _clickPos;
     BackgroundNode * _node{nullptr};
     bool _geometryChanged;

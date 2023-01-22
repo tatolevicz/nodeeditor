@@ -85,15 +85,17 @@ void TestNodeItem::mouseMoveEvent(QMouseEvent *event)
             bool dummy;
             auto t = itemTransform(this, &dummy);
             Q_UNUSED(t)
-            QPointF difference = (_clickPos - event->pos());///t.m11();
-            Q_UNUSED(difference);
+            _difference += (_clickPos - event->pos());///t.m11();
             _clickPos = event->pos();
+
+            setX(x() - _difference.x());
+            setY(y() - _difference.y());
         }
     }
 }
 void TestNodeItem::hoverEnterEvent(QHoverEvent *event){
     Q_UNUSED(event);
-    QGuiApplication::setOverrideCursor(QCursor(Qt::OpenHandCursor));
+    QGuiApplication::setOverrideCursor(QCursor(Qt::ArrowCursor));
 }
 void TestNodeItem::hoverLeaveEvent(QHoverEvent *event){
     Q_UNUSED(event);
