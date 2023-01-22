@@ -38,7 +38,7 @@ QmlGraphicsView::QmlGraphicsView(QQuickItem *parent)
     , _copySelectionAction(Q_NULLPTR)
     , _pasteAction(Q_NULLPTR)
 {
-    _transformNode = new GraphNode();
+    _worldNode = new GraphNode();
 
     setFlag(ItemHasContents, true);
     setAcceptedMouseButtons(Qt::MouseButton::LeftButton);
@@ -438,13 +438,16 @@ void QmlGraphicsView::geometryChange(const QRectF &newGeometry, const QRectF &ol
 }
 
 
-QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
+QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *data)
 {
     if(!_firstShowed) {
         onFirstShow();
 //        _firstShowed = true;
     }
 //    _transformNode = static_cast<GraphNode *>(oldNode);
+    if(_transformNode == nullptr)
+        _transformNode = data->transformNode;
+
     Q_UNUSED(oldNode)
     QRectF rect = boundingRect();
 
@@ -453,19 +456,21 @@ QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData 
         return nullptr;
     }
 
-    if (!_transformNode->background) {
+    if (!_worldNode->background) {
 //        _transformNode = new GraphNode();
-        _transformNode->background = new BackgroundNode(m_backgroundColor);
-        _transformNode->fineGrid = new GridNode(m_fineGridColor, 16);
-        _transformNode->coarseGrid = new GridNode(m_coarseGridColor, 16*10);
+        _worldNode->background = new BackgroundNode(m_backgroundColor);
+        _worldNode->fineGrid = new GridNode(m_fineGridColor, 16);
+        _worldNode->coarseGrid = new GridNode(m_coarseGridColor, 16*10);
 
 
-        _transformNode->background->setRect(QRectF(-_maxSizeX/2,-_maxSizeY/2, _maxSizeX, _maxSizeY));
-        _transformNode->fineGrid->setRect(QRectF(-_maxSizeX/2,-_maxSizeY/2, _maxSizeX, _maxSizeY));
-        _transformNode->coarseGrid->setRect(QRectF(-_maxSizeX/2,-_maxSizeY/2, _maxSizeX, _maxSizeY));
-        _transformNode->appendChildNode(_transformNode->background);
-        _transformNode->appendChildNode(_transformNode->fineGrid);
-        _transformNode->appendChildNode(_transformNode->coarseGrid);
+        _worldNode->background->setRect(QRectF(-_maxSizeX/2,-_maxSizeY/2, _maxSizeX, _maxSizeY));
+        _worldNode->fineGrid->setRect(QRectF(-_maxSizeX/2,-_maxSizeY/2, _maxSizeX, _maxSizeY));
+        _worldNode->coarseGrid->setRect(QRectF(-_maxSizeX/2,-_maxSizeY/2, _maxSizeX, _maxSizeY));
+
+        //Todo:: handle if first child is empty
+        _transformNode->insertChildNodeBefore(_worldNode->background, _transformNode->firstChild());
+        _transformNode->insertChildNodeAfter(_worldNode->fineGrid,_worldNode->background);
+        _transformNode->insertChildNodeAfter(_worldNode->coarseGrid, _worldNode->fineGrid);
 
 //        auto t = _transformNode->matrix().toTransform();
 //        t.translate( boundingRect().width()/2, boundingRect().height()/2);
@@ -486,7 +491,7 @@ QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData 
         onFirstShow();
     }
 
-    return _transformNode;
+    return _worldNode;
 //    QSGGeometryNode *node = nullptr;
 ////    QSGGeometry *geometry = nullptr;
 //
@@ -695,17 +700,19 @@ void QmlGraphicsView::setCurrentPosition(const QPointF& newPos){
         -newY
     );
 
+//    setX(-newX);
+//    setY(-newY);
     _deltaMove.setX(t.dx() - _lastPos.x());
     _deltaMove.setY(t.dy() - _lastPos.y());
     _lastPos.setX(t.dx());
     _lastPos.setY(t.dy());
-
-    for (auto c : childItems()) {
-        if (auto testItem = dynamic_cast<TestNodeItem *>(c)) {
-            testItem->setX(testItem->x() + _deltaMove.x());
-            testItem->setY(testItem->y() + _deltaMove.y());
-        }
-    }
+//
+//    for (auto c : childItems()) {
+//        if (auto testItem = dynamic_cast<TestNodeItem *>(c)) {
+//            testItem->setX(testItem->x() + _deltaMove.x());
+//            testItem->setY(testItem->y() + _deltaMove.y());
+//        }
+//    }
     
     _transformNode->setMatrix(t);
     update();
@@ -721,7 +728,7 @@ void QmlGraphicsView::plotViewPortPosition(){
 //    auto scale = t.m11();
 
     Q_UNUSED(t);
-    QRectF respRect = _transformNode->background->getRect();
+    QRectF respRect = _worldNode->background->getRect();
     respRect = mapToGridScene(respRect);
 
 

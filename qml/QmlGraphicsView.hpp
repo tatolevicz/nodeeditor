@@ -9,7 +9,7 @@
 class GridNode;
 class BackgroundNode;
 
-class GraphNode : public QSGTransformNode
+class GraphNode : public QSGNode
 {
 public:
     BackgroundNode * background;
@@ -134,7 +134,8 @@ private:
 
     QPointF _clickPos;
     ScaleRange _scaleRange;
-    GraphNode *_transformNode{nullptr};
+    GraphNode * _worldNode{nullptr};
+    QSGTransformNode *_transformNode{nullptr};
     bool _geometryChanged;
 
     QColor m_coarseGridColor;

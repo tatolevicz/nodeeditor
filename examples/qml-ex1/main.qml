@@ -34,8 +34,10 @@ Window {
                     height: 100
                     backgroundColor: "yellow"
                     x: 0
-                    y: -200
+                    y: 0
                 }
+
+
 
             }
         }
