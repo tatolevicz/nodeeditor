@@ -38,8 +38,6 @@ QmlGraphicsView::QmlGraphicsView(QQuickItem *parent)
     , _copySelectionAction(Q_NULLPTR)
     , _pasteAction(Q_NULLPTR)
 {
-    _worldNode = new GraphNode();
-
     setFlag(ItemHasContents, true);
     setAcceptedMouseButtons(Qt::MouseButton::LeftButton);
 //    setDragMode(QQmlGraphicsView::ScrollHandDrag); -> solved
@@ -401,7 +399,7 @@ void QmlGraphicsView::mouseMoveEvent(QMouseEvent *event)
         if ((event->modifiers() & Qt::ShiftModifier) == 0) {
             auto t = _transformNode->matrix().toTransform();
             Q_UNUSED(t)
-            QPointF difference = (_clickPos - event->pos());///t.m11();
+            QPointF difference = (_clickPos - event->pos())/t.m11();
             _clickPos = event->pos();
 
             auto cp = getCurrentPosition();
@@ -445,8 +443,9 @@ QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData 
 //        _firstShowed = true;
     }
 //    _transformNode = static_cast<GraphNode *>(oldNode);
-    if(_transformNode == nullptr)
-        _transformNode = data->transformNode;
+    _worldNode = static_cast<GraphNode *>(oldNode);
+//    if(_transformNode == nullptr)
+    _transformNode = data->transformNode;
 
     Q_UNUSED(oldNode)
     QRectF rect = boundingRect();
@@ -456,8 +455,8 @@ QSGNode* QmlGraphicsView::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData 
         return nullptr;
     }
 
-    if (!_worldNode->background) {
-//        _transformNode = new GraphNode();
+    if (!_worldNode) {
+        _worldNode = new GraphNode();
         _worldNode->background = new BackgroundNode(m_backgroundColor);
         _worldNode->fineGrid = new GridNode(m_fineGridColor, 16);
         _worldNode->coarseGrid = new GridNode(m_coarseGridColor, 16*10);
@@ -667,8 +666,7 @@ QPointF QmlGraphicsView::getCurrentPosition(){
 
 void QmlGraphicsView::setCurrentPosition(const QPointF& newPos){
     auto t = QTransform();
-    auto ct = _transformNode->matrix().toTransform();
-    t.scale(ct.m11(), ct.m11());
+
 
     auto newX = newPos.x();
     auto newY = newPos.y();
@@ -699,6 +697,9 @@ void QmlGraphicsView::setCurrentPosition(const QPointF& newPos){
         -newX,
         -newY
     );
+
+    auto ct = _transformNode->matrix().toTransform();
+    t.scale(ct.m11(), ct.m11());
 
 //    setX(-newX);
 //    setY(-newY);
