@@ -14,6 +14,7 @@
 #include <QPointF>
 #include <QRectF>
 #include <QtOpenGL>
+#include <QQuickWindow>
 #include "BackgroundNode.h"
 
 using QtNodes::TestNodeItem;
@@ -26,77 +27,72 @@ TestNodeItem::TestNodeItem(QQuickItem *parent)
     setAcceptHoverEvents(true);
     setAntialiasing(true);
 //    setFlags(ItemAcceptsInputMethod);
+
+    QTimer *timer = new QTimer(this);
+
+    connect(timer, &QTimer::timeout,[&](){
+        tick();
+    });
+
+    timer->setInterval(16); // 60 FPS
+
+    timer->start();
+
 }
 
 void TestNodeItem::keyPressEvent(QKeyEvent *event)
 {
     QQuickItem::keyPressEvent(event);
-    //testing node movent
 
-
+    if(event->modifiers() & Qt::ShiftModifier)
+        _shiftPressed = true;
+    else
+        _shiftPressed = false;
 
     switch (event->key()) {
         case Qt::Key::Key_Up:
-        {
-            setY(y() + _step);
+            _upPressed = true;
+            _downPressed = false;
             break;
-        }
         case Qt::Key::Key_Down:
-        {
-            setY(y() - _step);
+            _downPressed = true;
+            _upPressed = false;
             break;
-        }
         case Qt::Key::Key_Left:
-        {
-            setX(x() - _step);
+            _leftPressed = true;
+            _rightPressed = false;
             break;
-        }
         case Qt::Key::Key_Right:
-        {
-            setX(x() + _step);
+            _rightPressed = true;
+            _leftPressed = false;
             break;
-        }
-        case Qt::Key::Key_Shift:
-        {
-            _step = _step*5;
-            break;
-        }
         default: {
-            break;
+            return;
         }
     }
-
-    return;//############
-
-    switch (event->key()) {
-    case Qt::Key_Shift:
-        //        setDragMode(QTestNodeItem::RubberBandDrag);
-        break;
-
-    default:
-        break;
-    }
-
-    //    QTestNodeItem::keyPressEvent(event);
 }
 
 void TestNodeItem::keyReleaseEvent(QKeyEvent *event)
 {
-    QQuickItem::keyPressEvent(event);
-    //testing node movent
+    QQuickItem::keyReleaseEvent(event);
 
     switch (event->key()) {
-        case Qt::Key::Key_Shift:
-        {
-            _step = _step/5;
+        case Qt::Key::Key_Up:
+            _upPressed = false;
             break;
-        }
+        case Qt::Key::Key_Down:
+            _downPressed = false;
+            break;
+        case Qt::Key::Key_Left:
+            _leftPressed = false;
+            break;
+        case Qt::Key::Key_Right:
+            _rightPressed = false;
+            break;
         default: {
-            break;
+            return;
         }
     }
-
-    return;//############
 }
 
 void TestNodeItem::mousePressEvent(QMouseEvent *event)
@@ -203,4 +199,29 @@ void TestNodeItem::setBackgroundColor(const QColor &newColor)
 
 BackgroundNode* TestNodeItem::getNode(){
     return _node;
+}
+
+void TestNodeItem::tick() {
+
+    int step = _slowStep;
+
+    if(_shiftPressed)
+        step = _fastStep;
+
+    int dx = 0, dy = 0;
+    if (_leftPressed) {
+        dx -= step;
+    }
+    if (_rightPressed) {
+        dx += step;
+    }
+    if (_upPressed) {
+        dy -= step;
+    }
+    if (_downPressed) {
+        dy += step;
+    }
+    setX(x() + dx);
+    setY(y() + dy);
+    update();
 }

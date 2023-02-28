@@ -40,6 +40,9 @@ public:
     BackgroundNode* getNode();
 Q_SIGNALS:
     void backgroundColorChanged();
+
+
+
 protected:
     QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *) override;
     void geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry) override;
@@ -60,10 +63,19 @@ protected:
 
     void onFirstShow();
     bool _firstShowed = false;
-    short _step = 10;
+    short _slowStep = 1;
+    short _fastStep = 2;
+    bool _upPressed = false;
+    bool _downPressed = false;
+    bool _leftPressed = false;
+    bool _rightPressed = false;
+    bool _shiftPressed = false;
+
 protected:
 
 private:
+    void tick();
+
     QPointF _difference;
     QPointF _clickPos;
     BackgroundNode * _node{nullptr};
