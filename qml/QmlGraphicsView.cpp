@@ -346,6 +346,7 @@ void QmlGraphicsView::onPasteObjects()
 
 void QmlGraphicsView::keyPressEvent(QKeyEvent *event)
 {
+    QQuickItem::keyPressEvent(event);
     switch (event->key()) {
     case Qt::Key_Shift:
 //        setDragMode(QQmlGraphicsView::RubberBandDrag);
@@ -355,7 +356,7 @@ void QmlGraphicsView::keyPressEvent(QKeyEvent *event)
         break;
     }
 
-//    QQmlGraphicsView::keyPressEvent(event);
+    QQuickItem::keyPressEvent(event);
 }
 
 void QmlGraphicsView::keyReleaseEvent(QKeyEvent *event)

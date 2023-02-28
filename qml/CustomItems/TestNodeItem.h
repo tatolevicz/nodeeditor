@@ -57,9 +57,10 @@ protected:
     void hoverEnterEvent(QHoverEvent *event) override;
     void hoverLeaveEvent(QHoverEvent *event) override;
 
+
     void onFirstShow();
     bool _firstShowed = false;
-
+    short _step = 10;
 protected:
 
 private:

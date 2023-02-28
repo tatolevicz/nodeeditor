@@ -25,10 +25,49 @@ TestNodeItem::TestNodeItem(QQuickItem *parent)
     setAcceptedMouseButtons(Qt::MouseButton::LeftButton);
     setAcceptHoverEvents(true);
     setAntialiasing(true);
+//    setFlags(ItemAcceptsInputMethod);
 }
 
 void TestNodeItem::keyPressEvent(QKeyEvent *event)
 {
+    QQuickItem::keyPressEvent(event);
+    //testing node movent
+
+
+
+    switch (event->key()) {
+        case Qt::Key::Key_Up:
+        {
+            setY(y() + _step);
+            break;
+        }
+        case Qt::Key::Key_Down:
+        {
+            setY(y() - _step);
+            break;
+        }
+        case Qt::Key::Key_Left:
+        {
+            setX(x() - _step);
+            break;
+        }
+        case Qt::Key::Key_Right:
+        {
+            setX(x() + _step);
+            break;
+        }
+        case Qt::Key::Key_Shift:
+        {
+            _step = _step*5;
+            break;
+        }
+        default: {
+            break;
+        }
+    }
+
+    return;//############
+
     switch (event->key()) {
     case Qt::Key_Shift:
         //        setDragMode(QTestNodeItem::RubberBandDrag);
@@ -43,15 +82,21 @@ void TestNodeItem::keyPressEvent(QKeyEvent *event)
 
 void TestNodeItem::keyReleaseEvent(QKeyEvent *event)
 {
-    switch (event->key()) {
-    case Qt::Key_Shift:
-        //        setDragMode(QTestNodeItem::ScrollHandDrag);
-        break;
+    QQuickItem::keyPressEvent(event);
+    //testing node movent
 
-    default:
-        break;
+    switch (event->key()) {
+        case Qt::Key::Key_Shift:
+        {
+            _step = _step/5;
+            break;
+        }
+        default: {
+            break;
+        }
     }
-    //    QTestNodeItem::keyReleaseEvent(event);
+
+    return;//############
 }
 
 void TestNodeItem::mousePressEvent(QMouseEvent *event)
